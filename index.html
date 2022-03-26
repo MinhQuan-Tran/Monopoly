@@ -4,276 +4,377 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      defer
+    ></script>
+    <script src="index.js" defer></script>
     <link rel="stylesheet" href="style.css" />
     <title>Monopoly</title>
   </head>
   <body>
     <div class="grid-container">
-      <div class="grid-item">
-        <img
-          src="https://img.icons8.com/color/96/000000/parking.png"
-          style="width: 50%"
-        />
+      <div class="grid-item property-column">
+        <img src="https://img.icons8.com/color/96/000000/parking.png" />
         <h2>FREE PARKING</h2>
       </div>
 
-      <div class="grid-item border-bot-red">
-        STRAND<br />
-        <b>$220</b>
+      <div class="grid-item property-column">
+        <div class="property-info">
+          <div class="player-area"></div>
+          STRAND<br />
+          <b>$220</b>
+        </div>
+        <div class="house-area-red"></div>
       </div>
 
-      <div class="grid-item">
+      <div class="grid-item property-column">
+        <div class="player-area"></div>
         CHANCE
         <img src="https://img.icons8.com/color/48/000000/chip--v1.png" />
       </div>
 
-      <div class="grid-item border-bot-red">
-        FLEET STREET<br />
-        <b>$220</b>
+      <div class="grid-item property-column">
+        <div class="property-info">
+          <div class="player-area"></div>
+          FLEET STREET<br />
+          <b>$220</b>
+        </div>
+        <div class="house-area-red"></div>
       </div>
 
-      <div class="grid-item border-bot-red">
-        TRAFALGAR SQUARE<br />
-        <b>$240</b>
+      <div class="grid-item property-column">
+        <div class="property-info">
+          <div class="player-area"></div>
+          TRAFALGAR SQUARE<br />
+          <b>$240</b>
+        </div>
+        <div class="house-area-red"></div>
       </div>
 
-      <div class="grid-item">
+      <div class="grid-item property-column">
+        <div class="player-area"></div>
         FENCHURCH ST. STATION
         <img src="https://img.icons8.com/color/96/000000/subway.png" />
         <b>$200</b>
       </div>
 
-      <div class="grid-item border-bot-yellow">
-        LEICESTER SQUARE<br />
-        <b>$260</b>
+      <div class="grid-item property-column">
+        <div class="property-info">
+          <div class="player-area"></div>
+          LEICESTER SQUARE<br />
+          <b>$260</b>
+        </div>
+        <div class="house-area-yellow"></div>
       </div>
 
-      <div class="grid-item border-bot-yellow">
-        COVENTRY STREET<br />
-        <b>$260</b>
+      <div class="grid-item property-column">
+        <div class="property-info">
+          <div class="player-area"></div>
+          COVENTRY STREET<br />
+          <b>$260</b>
+        </div>
+        <div class="house-area-yellow"></div>
       </div>
 
-      <div class="grid-item">
+      <div class="grid-item property-column">
+        <div class="player-area"></div>
         WATER WORKS
         <img src="https://img.icons8.com/color/96/000000/water.png" />
         <b>$150</b>
       </div>
 
-      <div class="grid-item border-bot-yellow">
-        PICCADILLY<br />
-        <b>$280</b>
+      <div class="grid-item property-column">
+        <div class="property-info">
+          <div class="player-area"></div>
+          PICCADILLY<br />
+          <b>$280</b>
+        </div>
+        <div class="house-area-yellow"></div>
       </div>
 
-      <div class="grid-item">
-        <img
-          src="https://img.icons8.com/color/96/000000/detain.png"
-          style="width: 50%"
-        />
+      <div class="grid-item property-column">
+        <div class="player-area"></div>
+        <img src="https://img.icons8.com/color/96/000000/detain.png" />
         <h2>GO TO JAIL</h2>
       </div>
 
-      <div class="grid-item border-right-orange">
-        VINE STREET<br />
-        <b>$200</b>
+      <div class="grid-item property-row">
+        <div class="property-info">
+          <div class="player-area"></div>
+          VINE STREET<br />
+          <b>$200</b>
+        </div>
+        <div class="house-area-orange"></div>
       </div>
 
-      <div class="grid-item border-left-green">
-        REGENT STREET<br />
-        <b>$300</b>
-      </div>
-
-      <div class="grid-item border-right-orange">
-        MARLBOROUGH STREET<br />
-        <b>$180</b>
-      </div>
-
-      <div class="grid-item border-left-green">
-        OXFORD STREET<br />
-        <b>$300</b>
-      </div>
-
-      <div class="grid-item">
-        <div class="flex-row">
-          COMMUNITY CHEST
-          <img
-            src="https://img.icons8.com/color/96/000000/treasure-chest.png"
-          />
+      <div class="grid-item property-row">
+        <div class="house-area-green"></div>
+        <div class="property-info">
+          <div class="player-area"></div>
+          REGENT STREET<br />
+          <b>$300</b>
         </div>
       </div>
 
-      <div class="grid-item">
-        <div class="flex-row">
-          COMMUNITY CHEST
-          <img
-            src="https://img.icons8.com/color/96/000000/treasure-chest.png"
-          />
+      <div class="grid-item property-row">
+        <div class="property-info">
+          <div class="player-area"></div>
+          MARLBOROUGH STREET<br />
+          <b>$180</b>
+        </div>
+        <div class="house-area-orange"></div>
+      </div>
+
+      <div class="grid-item property-row">
+        <div class="house-area-green"></div>
+        <div class="property-info">
+          <div class="player-area"></div>
+          OXFORD STREET<br />
+          <b>$300</b>
         </div>
       </div>
 
-      <div class="grid-item border-right-orange">
-        BOW STREET<br />
-        <b>$180</b>
+      <div class="grid-item property-row">
+        <div class="player-area"></div>
+        COMMUNITY CHEST
+        <img src="https://img.icons8.com/color/96/000000/treasure-chest.png" />
       </div>
 
-      <div class="grid-item border-left-green">
-        BOND STREET<br />
-        <b>$320</b>
+      <div class="grid-item property-row">
+        <div class="player-area"></div>
+        COMMUNITY CHEST
+        <img src="https://img.icons8.com/color/96/000000/treasure-chest.png" />
       </div>
 
-      <div class="grid-item">
-        <div class="flex-row">
-          <div class="flex-column">
-            MARYLEBONE STATION
-            <b>$200</b>
-          </div>
-          <img src="https://img.icons8.com/color/96/000000/subway.png" />
+      <div class="grid-item property-row">
+        <div class="property-info">
+          <div class="player-area"></div>
+          BOW STREET<br />
+          <b>$180</b>
+        </div>
+        <div class="house-area-orange"></div>
+      </div>
+
+      <div class="grid-item property-row">
+        <div class="house-area-green"></div>
+        <div class="property-info">
+          <div class="player-area"></div>
+          BOND STREET<br />
+          <b>$320</b>
         </div>
       </div>
 
-      <div class="grid-item">
-        <div class="flex-row">
-          <div class="flex-column">
-            LIVERPOOL ST. STATION
-            <b>$200</b>
-          </div>
-          <img src="https://img.icons8.com/color/96/000000/subway.png" />
+      <div class="grid-item property-row">
+        <div class="property-info">
+          <div class="player-area"></div>
+          MARYLEBONE STATION
+          <b>$200</b>
         </div>
+        <img src="https://img.icons8.com/color/96/000000/subway.png" />
       </div>
 
-      <div class="grid-item border-right-palevioletred">
-        NORTHUMRL'D AVENUE<br />
-        <b>$160</b>
-      </div>
-
-      <div class="grid-item">
-        <div class="flex-row">
-          CHANCE
-          <img src="https://img.icons8.com/color/48/000000/chip--v1.png" />
+      <div class="grid-item property-row">
+        <div class="property-info">
+          <div class="player-area"></div>
+          LIVERPOOL ST. STATION
+          <b>$200</b>
         </div>
+        <img src="https://img.icons8.com/color/96/000000/subway.png" />
       </div>
 
-      <div class="grid-item border-right-palevioletred">
-        WHITEHALL<br />
-        <b>$140</b>
-      </div>
-
-      <div class="grid-item border-left-blue">
-        PARK LANE<br />
-        <b>$350</b>
-      </div>
-
-      <div class="grid-item">
-        <div class="flex-row">
-          <div class="flex-column">
-            ELECTRIC COMPANY
-            <b>$150</b>
-          </div>
-          <img
-            src="https://img.icons8.com/color/96/000000/electricity-hazard.png"
-          />
+      <div class="grid-item property-row">
+        <div class="property-info">
+          <div class="player-area"></div>
+          NORTHUMRL'D AVENUE<br />
+          <b>$160</b>
         </div>
+        <div class="house-area-palevioletred"></div>
       </div>
 
-      <div class="grid-item">
-        <div class="flex-row">
-          <div class="flex-column">
-            SUPER TAX
-            <p>PAY <b>$100</b></p>
-          </div>
-          <img src="https://img.icons8.com/color/96/000000/one-ring.png" />
-        </div>
-      </div>
-
-      <div class="grid-item border-right-palevioletred">
-        PALL MALL<br />
-        <b>$140</b>
-      </div>
-
-      <div class="grid-item border-left-blue">
-        MAYFAIR<br />
-        <b>$400</b>
-      </div>
-
-      <div class="grid-item">
-        <img
-          src="https://img.icons8.com/color/48/000000/prison-building.png"
-          style="width: 50%"
-        />
-        <h2>JAIL</h2>
-      </div>
-
-      <div class="grid-item border-top-skyblue">
-        PENTONVILLE ROAD<br />
-        <b>$120</b>
-      </div>
-
-      <div class="grid-item border-top-skyblue">
-        EUSTON ROAD<br />
-        <b>$100</b>
-      </div>
-
-      <div class="grid-item">
+      <div class="grid-item property-row">
+        <div class="player-area"></div>
         CHANCE
         <img src="https://img.icons8.com/color/48/000000/chip--v1.png" />
       </div>
 
-      <div class="grid-item border-top-skyblue">
-        THE ANGLE, ISLINGTON<br />
-        <b>$100</b>
+      <div class="grid-item property-row">
+        <div class="property-info">
+          <div class="player-area"></div>
+          WHITEHALL<br />
+          <b>$140</b>
+        </div>
+        <div class="house-area-palevioletred"></div>
       </div>
 
-      <div class="grid-item">
+      <div class="grid-item property-row">
+        <div class="house-area-blue"></div>
+        <div class="property-info">
+          <div class="player-area"></div>
+          PARK LANE<br />
+          <b>$350</b>
+        </div>
+      </div>
+
+      <div class="grid-item property-row">
+        <div class="property-info">
+          <div class="player-area"></div>
+          ELECTRIC COMPANY
+          <b>$150</b>
+        </div>
+        <img
+          src="https://img.icons8.com/color/96/000000/electricity-hazard.png"
+        />
+      </div>
+
+      <div class="grid-item property-row">
+        <div class="property-info">
+          <div class="player-area"></div>
+          SUPER TAX
+          <p>PAY <b>$100</b></p>
+        </div>
+        <img src="https://img.icons8.com/color/96/000000/one-ring.png" />
+      </div>
+
+      <div class="grid-item property-row">
+        <div class="property-info">
+          <div class="player-area"></div>
+          PALL MALL<br />
+          <b>$140</b>
+        </div>
+        <div class="house-area-palevioletred"></div>
+      </div>
+
+      <div class="grid-item property-row">
+        <div class="house-area-blue"></div>
+        <div class="property-info">
+          <div class="player-area"></div>
+          MAYFAIR<br />
+          <b>$400</b>
+        </div>
+      </div>
+
+      <div class="grid-item property-column">
+        <div class="player-area"></div>
+        <img src="https://img.icons8.com/color/48/000000/prison-building.png" />
+        <h2>JAIL</h2>
+      </div>
+
+      <div class="grid-item property-column">
+        <div class="house-area-skyblue"></div>
+        <div class="property-info">
+          <div class="player-area"></div>
+          PENTONVILLE ROAD<br />
+          <b>$120</b>
+        </div>
+      </div>
+
+      <div class="grid-item property-column">
+        <div class="house-area-skyblue"></div>
+        <div class="property-info">
+          <div class="player-area"></div>
+          EUSTON ROAD<br />
+          <b>$100</b>
+        </div>
+      </div>
+
+      <div class="grid-item property-column">
+        <div class="player-area"></div>
+        CHANCE
+        <img src="https://img.icons8.com/color/48/000000/chip--v1.png" />
+      </div>
+
+      <div class="grid-item property-column">
+        <div class="house-area-skyblue"></div>
+        <div class="property-info">
+          <div class="player-area"></div>
+          THE ANGLE, ISLINGTON<br />
+          <b>$100</b>
+        </div>
+      </div>
+
+      <div class="grid-item property-column">
+        <div class="player-area"></div>
         KINGS CROSS STATION
         <img src="https://img.icons8.com/color/96/000000/subway.png" />
         <b>$200</b>
       </div>
 
-      <div class="grid-item">
+      <div class="grid-item property-column">
+        <div class="player-area"></div>
         INCOME TAX
         <img src="https://img.icons8.com/color/96/000000/tax.png" />
         <p>PAY <b>$200</b></p>
       </div>
 
-      <div class="grid-item border-top-brown">
-        WHITECHAPEL ROAD<br />
-        <b>$60</b>
+      <div class="grid-item property-column">
+        <div class="house-area-brown"></div>
+        <div class="property-info">
+          <div class="player-area"></div>
+          WHITECHAPEL ROAD<br />
+          <b>$60</b>
+        </div>
       </div>
 
-      <div class="grid-item">
+      <div class="grid-item property-column">
+        <div class="player-area"></div>
         COMMUNITY CHEST
         <img src="https://img.icons8.com/color/96/000000/treasure-chest.png" />
       </div>
 
-      <div class="grid-item border-top-brown">
-        OLD KENT ROAD<br />
-        <b>$60</b>
+      <div class="grid-item property-column">
+        <div class="house-area-brown"></div>
+        <div class="property-info">
+          <div class="player-area"></div>
+          OLD KENT ROAD<br />
+          <b>$60</b>
+        </div>
       </div>
 
-      <div class="grid-item">
+      <div class="grid-item property-column">
+        <div class="player-area">
+          <div class="player">
+            <img
+              src="https://img.icons8.com/color/48/000000/user-male-circle--v1.png"
+            />
+          </div>
+          <div class="player">
+            <img
+              src="https://img.icons8.com/color/48/000000/user-male-circle--v1.png"
+            />
+          </div>
+          <div class="player">
+            <img
+              src="https://img.icons8.com/color/48/000000/user-male-circle--v1.png"
+            />
+          </div>
+          <div class="player">
+            <img
+              src="https://img.icons8.com/color/48/000000/user-male-circle--v1.png"
+            />
+          </div>
+        </div>
         <h1>GO</h1>
-        <img
-          src="https://img.icons8.com/nolan/96/arrow-pointing-left.png"
-          style="width: 50%"
-        />
+        <img src="https://img.icons8.com/nolan/96/arrow-pointing-left.png" />
         <p>COLLECT <b>$200</b></p>
       </div>
 
       <div class="grid-item span-9x9">
-        <div class="flex-column">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Monopoly-Logo.svg/1280px-Monopoly-Logo.svg.png"
+          style="width: 70%"
+        />
+        <div class="dices">
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Monopoly-Logo.svg/1280px-Monopoly-Logo.svg.png"
-            style="width: 70%"
+            id="dice1"
+            src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Terning6.svg"
           />
-          <div class="dices">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/c/c8/Terning1.svg"
-            />
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/2/23/Terning5.svg"
-            />
-          </div>
-          <div class="roll-button"></div>
+          <img
+            id="dice2"
+            src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Terning6.svg"
+          />
         </div>
+        <button id="action-button" value="roll-dice">ROLL DICE</button>
       </div>
     </div>
   </body>
