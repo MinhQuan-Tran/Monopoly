@@ -209,20 +209,28 @@ player[4] = new Player(
 
 $(function () {
   $("#action-button").click(async () => {
-    if ($("#action-button").val() == "roll-dice") {
-      $("#action-button").prop("disabled", true);
-      updateDices();
-      displayDices();
-      let sumDice = sumDices();
-      let step = sumDice;
-      await player[currentTurn].movePlayer(step, 200, true);
-      currentTurn++;
-      if (currentTurn > 4) {
-        currentTurn = 1;
-      }
-      $("#action-button").prop("disabled", false);
+    $("#action-button").prop("disabled", true);
+    switch ($("#action-button").val()) {
+      case "roll-dice":
+        updateDices();
+        displayDices();
+        let sumDice = sumDices();
+        let step = sumDice;
+        await player[currentTurn].movePlayer(step, 200, true);
+        if (dices[0] != dices[1]) {
+          $("#action-button").val("end-turn");
+          $("#action-button").text("END TURN");
+        }
+        break;
+      case "end-turn":
+        currentTurn++;
+        if (currentTurn > 4) {
+          currentTurn = 1;
+        }
+        $("#action-button").val("roll-dice");
+        $("#action-button").text("ROLL DICE");
+        break;
     }
+    $("#action-button").prop("disabled", false);
   });
 });
-
-//while (true) {}
