@@ -123,32 +123,56 @@ class Player {
       .detach()
       .appendTo(`#tile${this.pos} .player-area`);
   }
+
+  pay(amount) {
+    this.balance -= amount;
+  }
+
+  collect(amount) {
+    this.balance += amount;
+  }
 }
 
-// PROPERTIES
+// LAND
 
 class Property {
-  constructor(name, color, price, mortgage, isMortgage) {
+  constructor(name, color, price, owner, mortgage, isMortgage) {
     this.name = name;
     this.color = color; //property color
     this.price = price;
+    this.owner = owner;
     this.mortgage = mortgage; //mortgage values
     this.isMortgage = isMortgage;
   }
-  pay() {}
+  rentPay(player) {}
 }
 
 class Land extends Property {
-  constructor(name, color, price, mortgage, isMortgage, numHouse, housePrice) {
-    super(name, color, price, mortgage, isMortgage);
+  constructor(
+    name,
+    color,
+    price,
+    owner,
+    mortgage,
+    isMortgage,
+    numHouse,
+    housePrice,
+    rent
+  ) {
+    super(name, color, price, owner, mortgage, isMortgage);
     this.numHouse = numHouse; //5 houses = hotel
     this.housePrice = housePrice;
+    this.rent = rent; //array of 6
+  }
+  rentPay(player) {
+    player.pay(this.rent[numHouse]);
+    this.owner.collect(this.rent[numHouse]);
   }
 }
 
 class Station extends Property {
-  constructor(name, color, price, mortgage, isMortgage) {
-    super(name, color, price, mortgage, isMortgage);
+  constructor(name, color, price, isOwn, mortgage, isMortgage) {
+    super(name, color, price, isOwn, mortgage, isMortgage);
   }
 }
 
@@ -158,6 +182,7 @@ let player = [];
 let initBalance = 1000;
 let currentTurn = 1;
 let endTurn = false;
+let tiles = [];
 
 player[1] = new Player(
   "player1",
@@ -217,6 +242,7 @@ $(function () {
         let sumDice = sumDices();
         let step = sumDice;
         await player[currentTurn].movePlayer(step, 200, true);
+
         if (dices[0] != dices[1]) {
           $("#action-button").val("end-turn");
           $("#action-button").text("END TURN");
