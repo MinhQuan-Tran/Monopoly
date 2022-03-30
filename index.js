@@ -1,3 +1,5 @@
+// DICE
+
 let numDices = 2;
 let dices = [];
 
@@ -9,6 +11,14 @@ function updateDices() {
   for (var i = 0; i < numDices; i++) {
     dices[i] = randomDice();
   }
+}
+
+function sumDices() {
+  let sum = 0;
+  for (var i = 0; i < numDices; i++) {
+    sum += dices[i];
+  }
+  return sum;
 }
 
 function displayDices() {
@@ -43,11 +53,156 @@ function displayDices() {
   }
 }
 
+//PLAYER
+
+class Player {
+  constructor(
+    id,
+    pos,
+    name,
+    color,
+    inJail,
+    iconURL,
+    balance,
+    numOutJail,
+    properties
+  ) {
+    this.id = id;
+    this.pos = pos;
+    this.name = name;
+    this.color = color;
+    this.inJail = inJail;
+    this.iconURL = iconURL;
+    this.balance = balance;
+    this.numOutJail = numOutJail;
+    this.properties = properties;
+    //place player icon on board
+    $(`
+      <div id="${this.id}-icon-board" class="player-icon">
+        <img src="${this.iconURL}" />
+      </div>`).appendTo(`#tile${this.pos} .player-area`);
+    //place player info on player list
+    $(`<div id="${this.id}" class="player-info">
+          <span class="player-name">${this.name}</span>
+          <div class="player-icon">
+            <img
+              src="${this.iconURL}"
+            />
+          </div>
+          <span class="player-balance">$${balance}</span>
+        </div>`).appendTo(".player-list");
+    console.log(`${this.name} created`);
+  }
+  //tiles [1, 40]
+  moveForward() {
+    this.pos++;
+    if (this.pos > 40) {
+      this.pos = 1;
+    }
+  }
+  moveBackward() {
+    this.pos--;
+    if (this.pos < 1) {
+      this.pos = 40;
+    }
+  }
+  updatePosition() {
+    $(`#${this.id}-icon-board`)
+      .detach()
+      .appendTo(`#tile${this.pos} .player-area`);
+  }
+}
+
+// PROPERTIES
+
+class Property {
+  constructor(name, color, price, mortgage, isMortgage) {
+    this.name = name;
+    this.color = color; //property color
+    this.price = price;
+    this.mortgage = mortgage; //mortgage values
+    this.isMortgage = isMortgage;
+  }
+  pay() {}
+}
+
+class Land extends Property {
+  constructor(name, color, price, mortgage, isMortgage, numHouse, housePrice) {
+    super(name, color, price, mortgage, isMortgage);
+    this.numHouse = numHouse; //5 houses = hotel
+    this.housePrice = housePrice;
+  }
+}
+
+class Station extends Property {
+  constructor(name, color, price, mortgage, isMortgage) {
+    super(name, color, price, mortgage, isMortgage);
+  }
+}
+
+// MAIN
+let player = [];
+let initBalance = 1000;
+let currentTurn = 1;
+let endTurn = false;
+
+player[1] = new Player(
+  "player1",
+  1,
+  "PLAYER 1",
+  "red",
+  false,
+  "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
+  initBalance,
+  0,
+  []
+);
+
+player[2] = new Player(
+  "player2",
+  1,
+  "PLAYER 2",
+  "yellow",
+  false,
+  "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
+  initBalance,
+  0,
+  []
+);
+
+player[3] = new Player(
+  "player3",
+  1,
+  "PLAYER 3",
+  "green",
+  false,
+  "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
+  initBalance,
+  0,
+  []
+);
+
+player[4] = new Player(
+  "player4",
+  1,
+  "PLAYER 4",
+  "blue",
+  false,
+  "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
+  initBalance,
+  0,
+  []
+);
+
 $(function () {
   $("#action-button").click(function () {
     if ($("#action-button").val() == "roll-dice") {
+      $("#action-button").prop("disabled", true);
       updateDices();
       displayDices();
+      let sumDice = sumDices();
     }
   });
 });
+
+while (true) {}

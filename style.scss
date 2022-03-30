@@ -12,6 +12,18 @@ b {
   font-size: xx-small;
 }
 
+span {
+  font-size: medium;
+  font-weight: bold;
+}
+
+main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .grid-container {
   height: calc(100vh - 6px);
   min-height: 38rem;
@@ -67,17 +79,6 @@ $directions: column, row;
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
-  .player {
-    display: flex;
-    justify-content: center;
-    height: 50%;
-    width: 50%;
-    z-index: 1;
-    img {
-      object-fit: contain;
-      filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));
-    }
-  }
 }
 
 $property-colors: red, yellow, green, blue, brown, skyblue, palevioletred,
@@ -138,4 +139,45 @@ $property-colors: red, yellow, green, blue, brown, skyblue, palevioletred,
 
 #action-button {
   font-size: xx-large;
+}
+
+.player-list {
+  height: 100vh;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.player-info {
+  height: 25%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+$player-color: red, yellow, green, blue;
+$i: 0;
+
+@each $color in $player-color {
+  $i: $i + 1;
+  .player-icon {
+    display: flex;
+    justify-content: center;
+    height: 50%;
+    width: 50%;
+    z-index: 1;
+    img {
+      object-fit: scale-down;
+    }
+  }
+  #player#{$i},
+  #player#{$i}-icon-board {
+    img {
+      filter: drop-shadow(0 0 0.5rem $color);
+    }
+  }
 }
