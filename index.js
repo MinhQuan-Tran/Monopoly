@@ -94,18 +94,30 @@ class Player {
     console.log(`${this.name} created`);
   }
   //tiles [1, 40]
-  moveForward() {
-    this.pos++;
+  movePlayer(step, time, isForward) {
+    return new Promise((resolve) => {
+      let movePlayer = setInterval(() => {
+        player[currentTurn].move(isForward ? 1 : -1);
+        player[currentTurn].updatePosition();
+        step--;
+        if (step <= 0) {
+          clearInterval(movePlayer);
+          resolve();
+        }
+      }, time);
+    });
+  }
+
+  move(step) {
+    this.pos += step;
     if (this.pos > 40) {
-      this.pos = 1;
+      this.pos -= 40;
     }
-  }
-  moveBackward() {
-    this.pos--;
     if (this.pos < 1) {
-      this.pos = 40;
+      this.pos += 40;
     }
   }
+
   updatePosition() {
     $(`#${this.id}-icon-board`)
       .detach()
@@ -141,6 +153,7 @@ class Station extends Property {
 }
 
 // MAIN
+let numPlayers = 5;
 let player = [];
 let initBalance = 1000;
 let currentTurn = 1;
@@ -195,12 +208,19 @@ player[4] = new Player(
 );
 
 $(function () {
-  $("#action-button").click(function () {
+  $("#action-button").click(async () => {
     if ($("#action-button").val() == "roll-dice") {
       $("#action-button").prop("disabled", true);
       updateDices();
       displayDices();
       let sumDice = sumDices();
+      let step = sumDice;
+      await player[currentTurn].movePlayer(step, 200, true);
+      currentTurn++;
+      if (currentTurn > 4) {
+        currentTurn = 1;
+      }
+      $("#action-button").prop("disabled", false);
     }
   });
 });
