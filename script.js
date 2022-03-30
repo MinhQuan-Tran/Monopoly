@@ -249,12 +249,18 @@ $(function () {
         }
         break;
       case "end-turn":
+        $(`#${player[currentTurn].id} .player-info`).css(
+          "background-color: transparent;"
+        );
         currentTurn++;
         if (currentTurn > 4) {
           currentTurn = 1;
         }
         $("#action-button").val("roll-dice");
         $("#action-button").text("ROLL DICE");
+        $(`#${player[currentTurn].id} .player-info`).css(
+          "background-color: black;"
+        );
         break;
     }
     $("#action-button").prop("disabled", false);
