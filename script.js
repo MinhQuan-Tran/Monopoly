@@ -125,26 +125,59 @@ class Player {
   }
 
   pay(amount) {
+    if (this.balance < amount) {
+      alert("Not enough money!");
+      return false;
+    }
     this.balance -= amount;
+    updateMoney();
+    return true;
   }
 
   collect(amount) {
     this.balance += amount;
+    updateMoney();
+  }
+
+  updateMoney() {
+    $(`#${this.id} .player-balance`).innerHTML = this.balance;
   }
 }
 
-// LAND
+// TILES
 
 class Property {
-  constructor(name, color, price, owner, mortgage, isMortgage) {
+  constructor(name, color, price, owner, isMortgage) {
     this.name = name;
     this.color = color; //property color
     this.price = price;
     this.owner = owner;
-    this.mortgage = mortgage; //mortgage values
     this.isMortgage = isMortgage;
   }
+
   rentPay(player) {}
+
+  buy(player) {
+    if (player.pay(this.rent[numHouse])) {
+      this.owner = player;
+      return true;
+    }
+    return false;
+  }
+
+  mortgage() {
+    isMortgage = true;
+    this.owner.collect(price / 2); //mortgage price = property price / 2
+  }
+
+  unmortgage() {
+    //110% mortgage price
+    if (this.owner.pay((price / 2) * 1.1)) {
+      isMortgage = false;
+      return true;
+    }
+    return false;
+  }
 }
 
 class Land extends Property {
@@ -153,31 +186,50 @@ class Land extends Property {
     color,
     price,
     owner,
-    mortgage,
     isMortgage,
     numHouse,
     housePrice,
     rent
   ) {
-    super(name, color, price, owner, mortgage, isMortgage);
+    super(name, color, price, owner, isMortgage);
     this.numHouse = numHouse; //5 houses = hotel
     this.housePrice = housePrice;
     this.rent = rent; //array of 6
   }
+
   rentPay(player) {
-    player.pay(this.rent[numHouse]);
-    this.owner.collect(this.rent[numHouse]);
+    if (player.pay(this.rent[numHouse])) {
+      this.owner.collect(this.rent[numHouse]);
+      return true;
+    }
+    return false;
   }
 }
 
 class Station extends Property {
-  constructor(name, color, price, isOwn, mortgage, isMortgage) {
-    super(name, color, price, isOwn, mortgage, isMortgage);
+  constructor(name, color, price, owner, isMortgage) {
+    super(name, color, price, owner, isMortgage);
+  }
+
+  rentPay(player) {
+    let totalStation = 0;
+    owner.properties.forEach((property) => {
+      if (property.constructor.name == "Station") {
+        totalStation++;
+      }
+    });
+    if (player.pay(25 * Math.pow(2, totalStation))) {
+      // 25, 50, 100, 200
+      this.owner.collect(25 * Math.pow(2, totalStation));
+      return true;
+    }
+    return false;
   }
 }
 
 // MAIN
-let numPlayers = 5;
+$(function () {
+let numPlayers = 4;
 let player = [];
 let initBalance = 1000;
 let currentTurn = 1;
@@ -232,7 +284,11 @@ player[4] = new Player(
   []
 );
 
-$(function () {
+$(`#${player[currentTurn].id}`).css("background-color", "white");
+
+setupTiles();
+
+
   $("#action-button").click(async () => {
     $("#action-button").prop("disabled", true);
     switch ($("#action-button").val()) {
@@ -243,26 +299,75 @@ $(function () {
         let step = sumDice;
         await player[currentTurn].movePlayer(step, 200, true);
 
+        checkTile(player[currentTurn].pos);
+
         if (dices[0] != dices[1]) {
-          $("#action-button").val("end-turn");
-          $("#action-button").text("END TURN");
+          changeActionButton("end-turn");
         }
         break;
+
       case "end-turn":
-        $(`#${player[currentTurn].id} .player-info`).css(
-          "background-color: transparent;"
-        );
+        $(`#${player[currentTurn].id}`).css("background-color", "lightgrey");
         currentTurn++;
-        if (currentTurn > 4) {
+        if (currentTurn > numPlayers) {
           currentTurn = 1;
         }
-        $("#action-button").val("roll-dice");
-        $("#action-button").text("ROLL DICE");
-        $(`#${player[currentTurn].id} .player-info`).css(
-          "background-color: black;"
-        );
+        changeActionButton("roll-dice");
+        $(`#${player[currentTurn].id}`).css("background-color", "white");
         break;
     }
     $("#action-button").prop("disabled", false);
   });
+
+  $("#card-actions-1").click(() => {
+    switch ($("#card-actions-1").val()) {
+      case "buy":
+        //if (tiles[player[currentTurn].pos].constructor.name == )
+    }
+  });
 });
+
+// Functions
+
+function checkTile(pos) {
+  switch (tiles[pos].constructor.name) {
+    case "Land":
+      if (tiles[pos].owner == null) {
+        $("#card-actions-1").val() = "buy";
+        $("#card-actions-2").val() = "auction";
+        $(".popup-card").removeClass("hide");
+      }
+      break;
+  }
+}
+
+function changeActionButton(value) {
+  switch (value) {
+    case "end-turn":
+      $("#action-button").val("end-turn");
+      $("#action-button").text("END TURN");
+      break;
+    case "roll-dice":
+      $("#action-button").val("roll-dice");
+      $("#action-button").text("ROLL DICE");
+      break;
+  }
+}
+
+function setupTiles() {
+  $.getJSON("tiles.json", function (data) {
+    let land = data.land;
+    $.each(land, function (pos, name, color, price, housePrice, rent) {
+      tiles[pos] = new Land(
+        name,
+        color,
+        price,
+        null,
+        false,
+        0,
+        housePrice,
+        rent
+      );
+    });
+  });
+}
