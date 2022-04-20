@@ -1,5 +1,5 @@
 {
-    "land": [
+    "street": [
         {
             "pos": 2,
             "name": "OLD KENT ROAD",
@@ -183,6 +183,40 @@
             "price": 400,
             "housePrice": 200,
             "rent": [50, 200, 600, 1400, 1700, 2000]
+        }
+    ],
+    "station": [
+        {
+            "pos": 6,
+            "name": "KINGS CROSS STATION",
+            "price": 200
+        },
+        {
+            "pos": 16,
+            "name": "MARYLEBONE STATION",
+            "price": 200
+        },
+        {
+            "pos": 26,
+            "name": "FENCHURCH ST. STATION",
+            "price": 200
+        },
+        {
+            "pos": 36,
+            "name": "LIVERPOOL ST. STATION",
+            "price": 200
+        }
+    ],
+    "utility": [
+        {
+            "pos": 13,
+            "name": "ELECTRIC COMPANY",
+            "price": 150
+        },
+        {
+            "pos": 29,
+            "name": "WATER WORKS",
+            "price": 150
         }
     ]
 }

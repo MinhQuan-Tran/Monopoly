@@ -1,8 +1,7 @@
 export default class Property {
-  constructor(pos, name, color, price, owner, isMortgage) {
+  constructor(pos, name, price, owner, isMortgage) {
     this.pos = pos;
     this.name = name;
-    this.color = color; //property color
     this.price = price;
     this.owner = owner;
     this.isMortgage = isMortgage;
@@ -10,9 +9,21 @@ export default class Property {
 
   rentPay(player) {}
 
+  display(target) {}
+
   setOwner(player) {
     this.owner = player;
     $(`#tile${this.pos}`).css("background-color", player.color);
+  }
+
+  cardRow(left, right, selected) {
+    let cardLeft = $("<td></td>").text(left);
+    let cardRight = $("<td></td>").text("$" + right);
+    let cardRow = $("<tr></tr>").append(cardLeft).append(cardRight);
+    if (selected) {
+      cardRow.css("background-color", "skyblue");
+    }
+    return cardRow;
   }
 
   mortgage() {

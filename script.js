@@ -1,7 +1,8 @@
 import Player from "./player.js";
 import Dice from "./dice.js";
-import Land from "./land.js";
+import Street from "./street.js";
 import Station from "./station.js";
+import Utility from "./utility.js";
 
 $(function () {
   // DICE
@@ -155,7 +156,11 @@ $(function () {
   $("#card-action-1").click(() => {
     switch ($("#card-action-1").val()) {
       case "buy":
-        if (tiles[player[currentTurn].pos].constructor.name == "Land") {
+        if (
+          ["Street", "Station", "Utility"].includes(
+            tiles[player[currentTurn].pos].constructor.name
+          )
+        ) {
           if (player[currentTurn].buy(tiles[player[currentTurn].pos])) {
             $(".popup-card").addClass("hide");
           }
@@ -166,11 +171,13 @@ $(function () {
 
   function checkTile(pos) {
     switch (tiles[pos].constructor.name) {
-      case "Land":
+      case "Street":
+      case "Station":
+      case "Utility":
         if (tiles[pos].owner == null) {
           $("#card-action-1").val("buy");
           $("#card-action-2").val("auction");
-          $(".popup-card").removeClass("hide");
+          tiles[pos].display("buy");
         }
         break;
     }
@@ -191,18 +198,40 @@ $(function () {
 
   function setupTiles() {
     $.getJSON("tiles.json", function (data) {
-      let land = data.land;
-      $.each(land, function (key, value) {
-        tiles[value.pos] = new Land(
+      let street = data.street;
+      $.each(street, function (key, value) {
+        tiles[value.pos] = new Street(
           value.pos,
           value.name,
-          value.color,
           value.price,
           null,
           false,
+          value.color,
           0,
           value.housePrice,
           value.rent
+        );
+      });
+
+      let station = data.station;
+      $.each(station, function (key, value) {
+        tiles[value.pos] = new Station(
+          value.pos,
+          value.name,
+          value.price,
+          null,
+          false
+        );
+      });
+
+      let utility = data.utility;
+      $.each(utility, function (key, value) {
+        tiles[value.pos] = new Utility(
+          value.pos,
+          value.name,
+          value.price,
+          null,
+          false
         );
       });
     });

@@ -362,7 +362,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: xx-large;
+  font-size: x-large;
   color: white;
 }
 
@@ -370,12 +370,7 @@ body {
   height: 65%;
   width: 100%;
   font-size: medium;
-}
-.card-info table {
-  width: 100%;
-}
-.card-info table td:nth-child(2) {
-  float: right;
+  border-collapse: collapse;
 }
 
 .card-actions {

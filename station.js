@@ -1,8 +1,8 @@
 import Property from "./property.js";
 
 export default class Station extends Property {
-  constructor(pos, name, color, price, owner, isMortgage) {
-    super(name, color, price, owner, isMortgage);
+  constructor(pos, name, price, owner, isMortgage) {
+    super(pos, name, price, owner, isMortgage);
   }
 
   rentPay(player) {

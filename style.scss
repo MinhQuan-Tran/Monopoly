@@ -221,7 +221,7 @@ $i: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: xx-large;
+  font-size: x-large;
   color: white;
 }
 
@@ -229,12 +229,7 @@ $i: 0;
   height: 65%;
   width: 100%;
   font-size: medium;
-  table {
-    width: 100%;
-    td:nth-child(2) {
-      float: right;
-    }
-  }
+  border-collapse: collapse;
 }
 
 .card-actions {
