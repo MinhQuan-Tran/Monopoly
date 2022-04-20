@@ -1,23 +1,30 @@
+import Player from "./player.js";
+import Dice from "./dice.js";
+import Land from "./land.js";
+import Station from "./station.js";
+
 $(function () {
   // DICE
 
   let numDices = 2;
   let dices = [];
 
-  function randomDice() {
-    return Math.floor(Math.random() * 6 + 1);
+  function setupDices() {
+    for (let i = 0; i < numDices; i++) {
+      dices[i] = new Dice();
+    }
   }
 
-  function updateDices() {
+  function rollDices() {
     for (var i = 0; i < numDices; i++) {
-      dices[i] = randomDice();
+      dices[i].randomize();
     }
   }
 
   function sumDices() {
     let sum = 0;
     for (var i = 0; i < numDices; i++) {
-      sum += dices[i];
+      sum += dices[i].value;
     }
     return sum;
   }
@@ -25,7 +32,7 @@ $(function () {
   function displayDices() {
     for (var i = 0; i < numDices; i++) {
       let url = "";
-      switch (dices[i]) {
+      switch (dices[i].value) {
         case 1:
           url =
             "https://upload.wikimedia.org/wikipedia/commons/c/c8/Terning1.svg";
@@ -54,187 +61,12 @@ $(function () {
     }
   }
 
-  //PLAYER
-
-  class Player {
-    constructor(
-      id,
-      pos,
-      name,
-      color,
-      inJail,
-      iconURL,
-      balance,
-      numOutJail,
-      properties
-    ) {
-      this.id = id;
-      this.pos = pos;
-      this.name = name;
-      this.color = color;
-      this.inJail = inJail;
-      this.iconURL = iconURL;
-      this.balance = balance;
-      this.numOutJail = numOutJail;
-      this.properties = properties;
-      //place player icon on board
-      $(`
-      <div id="${this.id}-icon-board" class="player-icon">
-        <img src="${this.iconURL}" />
-      </div>`).appendTo(`#tile${this.pos} .player-area`);
-      //place player info on player list
-      $(`<div id="${this.id}" class="player-info">
-          <span class="player-name">${this.name}</span>
-          <div class="player-icon">
-            <img
-              src="${this.iconURL}"
-            />
-          </div>
-          <span class="player-balance">$${balance}</span>
-        </div>`).appendTo(".player-list");
-      console.log(`${this.name} created`);
-    }
-    //tiles [1, 40]
-    movePlayer(step, time, isForward) {
-      return new Promise((resolve) => {
-        let movePlayer = setInterval(() => {
-          player[currentTurn].move(isForward ? 1 : -1);
-          player[currentTurn].updatePosition();
-          step--;
-          if (step <= 0) {
-            clearInterval(movePlayer);
-            resolve();
-          }
-        }, time);
-      });
-    }
-
-    move(step) {
-      this.pos += step;
-      if (this.pos > 40) {
-        this.pos -= 40;
-      }
-      if (this.pos < 1) {
-        this.pos += 40;
-      }
-    }
-
-    updatePosition() {
-      $(`#${this.id}-icon-board`)
-        .detach()
-        .appendTo(`#tile${this.pos} .player-area`);
-    }
-
-    pay(amount) {
-      if (this.balance < amount) {
-        alert("Not enough money!");
-        return false;
-      }
-      this.balance -= amount;
-      updateMoney();
-      return true;
-    }
-
-    collect(amount) {
-      this.balance += amount;
-      updateMoney();
-    }
-
-    updateMoney() {
-      $(`#${this.id} .player-balance`).innerHTML = this.balance;
-    }
-  }
-
-  // TILES
-
-  class Property {
-    constructor(name, color, price, owner, isMortgage) {
-      this.name = name;
-      this.color = color; //property color
-      this.price = price;
-      this.owner = owner;
-      this.isMortgage = isMortgage;
-    }
-
-    rentPay(player) {}
-
-    buy(player) {
-      if (player.pay(this.rent[numHouse])) {
-        this.owner = player;
-        return true;
-      }
-      return false;
-    }
-
-    mortgage() {
-      isMortgage = true;
-      this.owner.collect(price / 2); //mortgage price = property price / 2
-    }
-
-    unmortgage() {
-      //110% mortgage price
-      if (this.owner.pay((price / 2) * 1.1)) {
-        isMortgage = false;
-        return true;
-      }
-      return false;
-    }
-  }
-
-  class Land extends Property {
-    constructor(
-      name,
-      color,
-      price,
-      owner,
-      isMortgage,
-      numHouse,
-      housePrice,
-      rent
-    ) {
-      super(name, color, price, owner, isMortgage);
-      this.numHouse = numHouse; //5 houses = hotel
-      this.housePrice = housePrice;
-      this.rent = rent; //array of 6
-    }
-
-    rentPay(player) {
-      if (player.pay(this.rent[numHouse])) {
-        this.owner.collect(this.rent[numHouse]);
-        return true;
-      }
-      return false;
-    }
-  }
-
-  class Station extends Property {
-    constructor(name, color, price, owner, isMortgage) {
-      super(name, color, price, owner, isMortgage);
-    }
-
-    rentPay(player) {
-      let totalStation = 0;
-      owner.properties.forEach((property) => {
-        if (property.constructor.name == "Station") {
-          totalStation++;
-        }
-      });
-      if (player.pay(25 * Math.pow(2, totalStation))) {
-        // 25, 50, 100, 200
-        this.owner.collect(25 * Math.pow(2, totalStation));
-        return true;
-      }
-      return false;
-    }
-  }
-
   // MAIN
 
   let numPlayers = 4;
   let player = [];
   let initBalance = 1000;
   let currentTurn = 1;
-  let endTurn = false;
   let tiles = [];
 
   player[1] = new Player(
@@ -288,12 +120,13 @@ $(function () {
   $(`#${player[currentTurn].id}`).css("background-color", "white");
 
   setupTiles();
+  setupDices();
 
   $("#action-button").click(async () => {
     $("#action-button").prop("disabled", true);
     switch ($("#action-button").val()) {
       case "roll-dice":
-        updateDices();
+        rollDices();
         displayDices();
         let sumDice = sumDices();
         let step = sumDice;
@@ -319,15 +152,17 @@ $(function () {
     $("#action-button").prop("disabled", false);
   });
 
-  $("#card-actions-1").click(() => {
-    switch ($("#card-actions-1").val()) {
+  $("#card-action-1").click(() => {
+    switch ($("#card-action-1").val()) {
       case "buy":
-        //if (tiles[player[currentTurn].pos].constructor.name == )
+        if (tiles[player[currentTurn].pos].constructor.name == "Land") {
+          if (player[currentTurn].buy(tiles[player[currentTurn].pos])) {
+            $(".popup-card").addClass("hide");
+          }
+        }
         break;
     }
   });
-
-  // Functions
 
   function checkTile(pos) {
     switch (tiles[pos].constructor.name) {
@@ -357,18 +192,20 @@ $(function () {
   function setupTiles() {
     $.getJSON("tiles.json", function (data) {
       let land = data.land;
-      $.each(land, function (pos, name, color, price, housePrice, rent) {
-        tiles[pos] = new Land(
-          name,
-          color,
-          price,
+      $.each(land, function (key, value) {
+        tiles[value.pos] = new Land(
+          value.pos,
+          value.name,
+          value.color,
+          value.price,
           null,
           false,
           0,
-          housePrice,
-          rent
+          value.housePrice,
+          value.rent
         );
       });
     });
+    console.log(tiles);
   }
 });
