@@ -44,6 +44,16 @@ export default class Street extends Property {
     return false;
   }
 
+  targetDisplay() {
+    if (this.numHouse == 0) {
+      if (this.owner.colorSet.includes(this.color)) {
+        return 1;
+      }
+      return 0;
+    }
+    return this.numHouse;
+  }
+
   display(target) {
     super.display(target);
     $(".card-info").append(super.cardRow("Rent", this.rent[0], target === 0));

@@ -8,7 +8,8 @@ export default class Player {
     iconURL,
     balance,
     numOutJail,
-    properties
+    properties,
+    colorSet
   ) {
     this.id = id;
     this.pos = pos;
@@ -19,6 +20,7 @@ export default class Player {
     this.balance = balance;
     this.numOutJail = numOutJail;
     this.properties = properties;
+    this.colorSet = colorSet;
     //place player icon on board
     $(`
       <div id="${this.id}-icon-board" class="player-icon">
@@ -79,5 +81,16 @@ export default class Player {
       return true;
     }
     return false;
+  }
+
+  getInJail() {
+    this.inJail = true;
+    $(`#${this.id}-icon-board`).append(
+      `<img src="https://img.icons8.com/external-icongeek26-flat-icongeek26/64/000000/external-jail-police-icongeek26-flat-icongeek26.png" />`
+    );
+  }
+  getOutJail() {
+    this.inJail = false;
+    $(`#${this.id}-icon-board`).children().last().remove();
   }
 }

@@ -9,6 +9,8 @@ export default class Property {
 
   rentPay(player) {}
 
+  targetDisplay() {}
+
   display(target) {
     $(".card-name").text(this.name);
     $(".card-info").empty();

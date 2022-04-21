@@ -73,9 +73,11 @@ $(async function () {
 
   let numPlayers = 4;
   let player = [];
-  let initBalance = 1000;
   let currentTurn = 1;
   let tiles = [];
+  // const initBalance = 1000;
+  const initBalance = 10000;
+  const timeBetweenStep = 200;
 
   await setupTiles();
   await setupDices();
@@ -89,7 +91,7 @@ $(async function () {
         displayDices();
         let sumDice = sumDices();
         let step = sumDice;
-        await movePlayer(player[currentTurn], step, 200, true);
+        await movePlayer(player[currentTurn], step, timeBetweenStep, true);
 
         await checkTile(player[currentTurn].pos);
 
@@ -147,7 +149,6 @@ $(async function () {
   async function checkTile(pos, specificType) {
     if (specificType != null) {
       if (tiles[pos].constructor.name === specificType) {
-        console.log(tiles[pos].constructor.name);
         return true;
       }
     } else {
@@ -156,13 +157,28 @@ $(async function () {
         case "Station":
         case "Utility":
           if (tiles[pos].owner == null) {
-            $("#card-action-1").val("buy");
-            $("#card-action-2").val("auction");
+            $("#card-action-1").val("buy").text("Buy").removeClass("hide");
+            $("#card-action-2")
+              .val("auction")
+              .text("Auction")
+              .removeClass("hide");
             tiles[pos].display("buy");
             await checkPopupCard();
           } else if (tiles[pos].owner != player[currentTurn]) {
+            $("#card-action-1").addClass("hide");
+            $("#card-action-2").addClass("hide");
+            tiles[pos].display(tiles[pos].targetDisplay());
             await tiles[pos].rentPay(player[currentTurn]);
+            setTimeout(() => {
+              $(".popup-card").addClass("hide");
+            }, 2000);
           }
+          break;
+        case "GoToJail":
+          let step = player[currentTurn].pos - tiles[pos].jailPos;
+          movePlayer(player[currentTurn], step, timeBetweenStep / 4, false);
+          player[currentTurn].getInJail();
+          changeActionButton("end-turn");
           break;
       }
     }
@@ -288,6 +304,7 @@ $(async function () {
       "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
       initBalance,
       0,
+      [],
       []
     );
 
@@ -300,6 +317,7 @@ $(async function () {
       "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
       initBalance,
       0,
+      [],
       []
     );
 
@@ -312,6 +330,7 @@ $(async function () {
       "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
       initBalance,
       0,
+      [],
       []
     );
 
@@ -324,6 +343,7 @@ $(async function () {
       "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
       initBalance,
       0,
+      [],
       []
     );
 

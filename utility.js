@@ -24,6 +24,16 @@ export default class Utility extends Property {
     }
   }
 
+  targetDisplay() {
+    let totalUtility = 0;
+    this.owner.properties.forEach((property) => {
+      if (property.constructor.name == "Utility") {
+        totalUtility++;
+      }
+    });
+    return totalUtility - 1;
+  }
+
   display(target) {
     super.display(target);
     $(".card-info").append(

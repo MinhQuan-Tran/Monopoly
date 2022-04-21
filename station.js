@@ -33,6 +33,16 @@ export default class Station extends Property {
     return false;
   }
 
+  targetDisplay() {
+    let totalStation = 0;
+    this.owner.properties.forEach((property) => {
+      if (property.constructor.name == "Station") {
+        totalStation++;
+      }
+    });
+    return totalStation - 1;
+  }
+
   display(target) {
     super.display(target);
     $(".card-info").append(

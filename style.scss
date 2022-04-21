@@ -189,8 +189,19 @@ $i: 0;
   }
   #player#{$i},
   #player#{$i}-icon-board {
-    img {
+    img:first-child {
       filter: drop-shadow(0 0 0.5rem $color);
+    }
+  }
+  #player#{$i}-icon-board {
+    position: relative;
+    img {
+      max-height: 100%;
+      max-width: 100%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 }

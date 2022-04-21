@@ -271,9 +271,21 @@ body {
   background-color: lightgrey;
 }
 
-#player1 img,
-#player1-icon-board img {
+#player1 img:first-child,
+#player1-icon-board img:first-child {
   filter: drop-shadow(0 0 0.5rem red);
+}
+
+#player1-icon-board {
+  position: relative;
+}
+#player1-icon-board img {
+  max-height: 100%;
+  max-width: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .player-icon {
@@ -291,9 +303,21 @@ body {
   background-color: lightgrey;
 }
 
-#player2 img,
-#player2-icon-board img {
+#player2 img:first-child,
+#player2-icon-board img:first-child {
   filter: drop-shadow(0 0 0.5rem yellow);
+}
+
+#player2-icon-board {
+  position: relative;
+}
+#player2-icon-board img {
+  max-height: 100%;
+  max-width: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .player-icon {
@@ -311,9 +335,21 @@ body {
   background-color: lightgrey;
 }
 
-#player3 img,
-#player3-icon-board img {
+#player3 img:first-child,
+#player3-icon-board img:first-child {
   filter: drop-shadow(0 0 0.5rem green);
+}
+
+#player3-icon-board {
+  position: relative;
+}
+#player3-icon-board img {
+  max-height: 100%;
+  max-width: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .player-icon {
@@ -331,9 +367,21 @@ body {
   background-color: lightgrey;
 }
 
-#player4 img,
-#player4-icon-board img {
+#player4 img:first-child,
+#player4-icon-board img:first-child {
   filter: drop-shadow(0 0 0.5rem blue);
+}
+
+#player4-icon-board {
+  position: relative;
+}
+#player4-icon-board img {
+  max-height: 100%;
+  max-width: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .popup-card {
