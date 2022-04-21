@@ -3,8 +3,15 @@ import Dice from "./dice.js";
 import Street from "./street.js";
 import Station from "./station.js";
 import Utility from "./utility.js";
+import Go from "./go.js";
+import Chance from "./chance.js";
+import Chest from "./chest.js";
+import Tax from "./tax.js";
+import GoToJail from "./gotojail.js";
+import Jail from "./jail.js";
+import Parking from "./parking.js";
 
-$(function () {
+$(async function () {
   // DICE
 
   let numDices = 2;
@@ -70,58 +77,9 @@ $(function () {
   let currentTurn = 1;
   let tiles = [];
 
-  player[1] = new Player(
-    "player1",
-    1,
-    "PLAYER 1",
-    "red",
-    false,
-    "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
-    initBalance,
-    0,
-    []
-  );
-
-  player[2] = new Player(
-    "player2",
-    1,
-    "PLAYER 2",
-    "yellow",
-    false,
-    "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
-    initBalance,
-    0,
-    []
-  );
-
-  player[3] = new Player(
-    "player3",
-    1,
-    "PLAYER 3",
-    "green",
-    false,
-    "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
-    initBalance,
-    0,
-    []
-  );
-
-  player[4] = new Player(
-    "player4",
-    1,
-    "PLAYER 4",
-    "blue",
-    false,
-    "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
-    initBalance,
-    0,
-    []
-  );
-
-  $(`#${player[currentTurn].id}`).css("background-color", "white");
-
-  setupTiles();
-  setupDices();
+  await setupTiles();
+  await setupDices();
+  await setupPlayers();
 
   $("#action-button").click(async () => {
     $("#action-button").prop("disabled", true);
@@ -131,11 +89,11 @@ $(function () {
         displayDices();
         let sumDice = sumDices();
         let step = sumDice;
-        await player[currentTurn].movePlayer(step, 200, true);
+        await movePlayer(player[currentTurn], step, 200, true);
 
-        checkTile(player[currentTurn].pos);
+        await checkTile(player[currentTurn].pos);
 
-        if (dices[0] != dices[1]) {
+        if (dices[0].value != dices[1].value) {
           changeActionButton("end-turn");
         }
         break;
@@ -169,18 +127,64 @@ $(function () {
     }
   });
 
-  function checkTile(pos) {
-    switch (tiles[pos].constructor.name) {
-      case "Street":
-      case "Station":
-      case "Utility":
-        if (tiles[pos].owner == null) {
-          $("#card-action-1").val("buy");
-          $("#card-action-2").val("auction");
-          tiles[pos].display("buy");
+  function movePlayer(player, step, time, isForward) {
+    return new Promise((resolve) => {
+      let movePlayer = setInterval(async () => {
+        await player.move(isForward ? 1 : -1);
+        player.updatePosition();
+        if (checkTile(player.pos, "Go") == true) {
+          player.collect(tiles[player.pos].salary);
         }
-        break;
+        step--;
+        if (step <= 0) {
+          clearInterval(movePlayer);
+          resolve();
+        }
+      }, time);
+    });
+  }
+
+  async function checkTile(pos, specificType) {
+    if (specificType != null) {
+      if (tiles[pos].constructor.name === specificType) {
+        console.log(tiles[pos].constructor.name);
+        return true;
+      }
+    } else {
+      switch (tiles[pos].constructor.name) {
+        case "Street":
+        case "Station":
+        case "Utility":
+          if (tiles[pos].owner == null) {
+            $("#card-action-1").val("buy");
+            $("#card-action-2").val("auction");
+            tiles[pos].display("buy");
+            await checkPopupCard();
+          } else if (tiles[pos].owner != player[currentTurn]) {
+            await tiles[pos].rentPay(player[currentTurn]);
+          }
+          break;
+      }
     }
+  }
+
+  function checkPopupCard() {
+    return new Promise((resolve) => {
+      if ($(".popup-card").hasClass("hide")) {
+        resolve();
+      }
+
+      let observer = new MutationObserver((mutations) => {
+        if ($(".popup-card").hasClass("hide")) {
+          resolve();
+          observer.disconnect();
+        }
+      });
+
+      observer.observe(document.getElementById("popup-card"), {
+        attributes: true,
+      });
+    });
   }
 
   function changeActionButton(value) {
@@ -196,8 +200,8 @@ $(function () {
     }
   }
 
-  function setupTiles() {
-    $.getJSON("tiles.json", function (data) {
+  async function setupTiles() {
+    await $.getJSON("tiles.json", function (data) {
       let street = data.street;
       $.each(street, function (key, value) {
         tiles[value.pos] = new Street(
@@ -234,7 +238,95 @@ $(function () {
           false
         );
       });
+
+      let go = data.go;
+      $.each(go, function (key, value) {
+        tiles[value.pos] = new Go(value.pos, value.salary);
+      });
+
+      let chance = data.chance;
+      $.each(chance, function (key, value) {
+        tiles[value.pos] = new Chance(value.pos);
+      });
+
+      let chest = data.chest;
+      $.each(chest, function (key, value) {
+        tiles[value.pos] = new Chest(value.pos);
+      });
+
+      let tax = data.tax;
+      $.each(tax, function (key, value) {
+        tiles[value.pos] = new Tax(
+          value.pos,
+          value.name,
+          value.tax,
+          value.iconURL
+        );
+      });
+
+      let goToJail = data.goToJail;
+      $.each(goToJail, function (key, value) {
+        tiles[value.pos] = new GoToJail(value.pos, value.jailPos);
+        tiles[value.jailPos] = new Jail(value.jailPos);
+      });
+
+      let parking = data.parking;
+      $.each(parking, function (key, value) {
+        tiles[value.pos] = new Parking(value.pos);
+      });
     });
     console.log(tiles);
+  }
+
+  function setupPlayers() {
+    player[1] = new Player(
+      "player1",
+      1,
+      "PLAYER 1",
+      "red",
+      false,
+      "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
+      initBalance,
+      0,
+      []
+    );
+
+    player[2] = new Player(
+      "player2",
+      1,
+      "PLAYER 2",
+      "yellow",
+      false,
+      "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
+      initBalance,
+      0,
+      []
+    );
+
+    player[3] = new Player(
+      "player3",
+      1,
+      "PLAYER 3",
+      "green",
+      false,
+      "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
+      initBalance,
+      0,
+      []
+    );
+
+    player[4] = new Player(
+      "player4",
+      1,
+      "PLAYER 4",
+      "blue",
+      false,
+      "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
+      initBalance,
+      0,
+      []
+    );
+
+    $(`#${player[currentTurn].id}`).css("background-color", "white");
   }
 });

@@ -5,20 +5,30 @@ export default class Property {
     this.price = price;
     this.owner = owner;
     this.isMortgage = isMortgage;
-    $(`#tile${this.pos} .property-info`)
-      .empty()
-      .append(
-        `<div class="player-area"></div>${this.name}<br/><b>\$${this.price}</b>`
-      );
   }
 
   rentPay(player) {}
 
-  display(target) {}
+  display(target) {
+    $(".card-name").text(this.name);
+    $(".card-info").empty();
+    $(".card-info").append(
+      this.cardRow("Purchase Price", this.price, target === "buy")
+    );
+    $(".card-info").append(
+      this.cardRow("Mortgage Value", this.price / 2, target === "mortage")
+    );
+    $(".card-info").append($("<tr></tr>").append($("<br>")));
+  }
 
   setOwner(player) {
     this.owner = player;
     $(`#tile${this.pos}`).css("background-color", player.color);
+  }
+
+  resetOwner() {
+    this.owner = null;
+    $(`#tile${this.pos}`).css("background-color", rgb(212, 252, 218));
   }
 
   cardRow(left, right, selected) {

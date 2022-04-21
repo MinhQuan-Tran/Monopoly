@@ -37,20 +37,6 @@ export default class Player {
     console.log(`${this.name} created`);
   }
 
-  movePlayer(step, time, isForward) {
-    return new Promise((resolve) => {
-      let movePlayer = setInterval(() => {
-        this.move(isForward ? 1 : -1);
-        this.updatePosition();
-        step--;
-        if (step <= 0) {
-          clearInterval(movePlayer);
-          resolve();
-        }
-      }, time);
-    });
-  }
-
   move(step) {
     this.pos += step;
     if (this.pos > 40) {
@@ -79,11 +65,10 @@ export default class Player {
 
   collect(amount) {
     this.balance += amount;
-    updateMoney();
+    this.updateMoney();
   }
 
   updateMoney() {
-    console.log($(`#${this.id} .player-balance`));
     $(`#${this.id} .player-balance`).text("$" + this.balance);
   }
 

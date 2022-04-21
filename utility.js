@@ -23,4 +23,16 @@ export default class Utility extends Property {
       return false;
     }
   }
+
+  display(target) {
+    super.display(target);
+    $(".card-info").append(
+      super.cardRow("One utility", "4 x dice sum", target === 0)
+    );
+    $(".card-info").append(
+      super.cardRow("Two utilities", "10 x dice sum"),
+      target === 1
+    );
+    $(".popup-card").removeClass("hide");
+  }
 }

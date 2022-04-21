@@ -171,7 +171,7 @@
         {
             "pos": 38,
             "name": "PARK LANE",
-            "color": "green",
+            "color": "blue",
             "price": 350,
             "housePrice": 200,
             "rent": [35, 175, 500, 1100, 1300, 1500]
@@ -179,7 +179,7 @@
         {
             "pos": 40,
             "name": "MAYFAIR",
-            "color": "green",
+            "color": "blue",
             "price": 400,
             "housePrice": 200,
             "rent": [50, 200, 600, 1400, 1700, 2000]
@@ -217,6 +217,59 @@
             "pos": 29,
             "name": "WATER WORKS",
             "price": 150
+        }
+    ],
+    "go": [
+        {
+            "pos": 1,
+            "salary": 400
+        }
+    ],
+    "chance": [
+        {
+            "pos": 8
+        },
+        {
+            "pos": 23
+        },
+        {
+            "pos": 37
+        }
+    ],
+    "chest": [
+        {
+            "pos": 3
+        },
+        {
+            "pos": 18
+        },
+        {
+            "pos": 34
+        }
+    ],
+    "tax": [
+        {
+            "pos": 5,
+            "name": "INCOME",
+            "tax": 200,
+            "iconURL": "https://img.icons8.com/color/96/000000/tax.png"
+        },
+        {
+            "pos": 39,
+            "name": "SUPER",
+            "tax": 100,
+            "iconURL": "https://img.icons8.com/color/96/000000/one-ring.png"
+        }
+    ],
+    "goToJail": [
+        {
+            "pos": 31,
+            "jailPos": 11
+        }
+    ],
+    "parking": [
+        {
+            "pos": 21
         }
     ]
 }

@@ -17,26 +17,35 @@ export default class Street extends Property {
     this.numHouse = numHouse; //5 houses = hotel
     this.housePrice = housePrice;
     this.rent = rent; //array of 6
+    if (this.pos < 12 || this.pos > 31) {
+      // bottom and right
+      $(`#tile${this.pos}`).empty()
+        .append(`<div class="house-area-${this.color}"></div>
+        <div class="property-info">
+          <div class="player-area"></div>
+          ${this.name}<br />
+          <b>\$${this.price}</b>
+        </div>`);
+    } else {
+      $(`#tile${this.pos}`).empty().append(`<div class="property-info">
+          <div class="player-area"></div>
+          ${this.name}<br />
+          <b>\$${this.price}</b>
+        </div>
+        <div class="house-area-${this.color}"></div>`);
+    }
   }
 
   rentPay(player) {
-    if (player.pay(this.rent[numHouse])) {
-      this.owner.collect(this.rent[numHouse]);
+    if (player.pay(this.rent[this.numHouse])) {
+      this.owner.collect(this.rent[this.numHouse]);
       return true;
     }
     return false;
   }
 
   display(target) {
-    $(".card-name").text(this.name);
-    $(".card-info").empty();
-    $(".card-info").append(
-      super.cardRow("Purchase Price", this.price, target === "buy")
-    );
-    $(".card-info").append(
-      super.cardRow("Mortgage Value", this.price / 2, target === "mortage")
-    );
-    $(".card-info").append($("<tr></tr>").append($("<br>")));
+    super.display(target);
     $(".card-info").append(super.cardRow("Rent", this.rent[0], target === 0));
     $(".card-info").append(
       super.cardRow("Rent with color set", this.rent[0] * 2),
