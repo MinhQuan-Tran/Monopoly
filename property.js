@@ -5,6 +5,11 @@ export default class Property {
     this.price = price;
     this.owner = owner;
     this.isMortgage = isMortgage;
+    $(`#tile${this.pos} .property-info`)
+      .empty()
+      .append(
+        `<div class="player-area"></div>${this.name}<br/><b>\$${this.price}</b>`
+      );
   }
 
   rentPay(player) {}
