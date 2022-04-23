@@ -75,7 +75,6 @@ $(async function () {
   let player = [];
   let currentTurn = 1;
   let tiles = [];
-  // const initBalance = 1000;
   const initBalance = 10000;
   const timeBetweenStep = 200;
 
@@ -134,7 +133,7 @@ $(async function () {
       let movePlayer = setInterval(async () => {
         await player.move(isForward ? 1 : -1);
         player.updatePosition();
-        if (checkTile(player.pos, "Go") == true) {
+        if (tiles[player.pos].constructor.name == "Go") {
           player.collect(tiles[player.pos].salary);
         }
         step--;
@@ -146,41 +145,35 @@ $(async function () {
     });
   }
 
-  async function checkTile(pos, specificType) {
-    if (specificType != null) {
-      if (tiles[pos].constructor.name === specificType) {
-        return true;
-      }
-    } else {
-      switch (tiles[pos].constructor.name) {
-        case "Street":
-        case "Station":
-        case "Utility":
-          if (tiles[pos].owner == null) {
-            $("#card-action-1").val("buy").text("Buy").removeClass("hide");
-            $("#card-action-2")
-              .val("auction")
-              .text("Auction")
-              .removeClass("hide");
-            tiles[pos].display("buy");
-            await checkPopupCard();
-          } else if (tiles[pos].owner != player[currentTurn]) {
-            $("#card-action-1").addClass("hide");
-            $("#card-action-2").addClass("hide");
-            tiles[pos].display(tiles[pos].targetDisplay());
-            await tiles[pos].rentPay(player[currentTurn]);
-            setTimeout(() => {
-              $(".popup-card").addClass("hide");
-            }, 2000);
-          }
-          break;
-        case "GoToJail":
-          let step = player[currentTurn].pos - tiles[pos].jailPos;
-          movePlayer(player[currentTurn], step, timeBetweenStep / 4, false);
-          player[currentTurn].getInJail();
-          changeActionButton("end-turn");
-          break;
-      }
+  async function checkTile(pos) {
+    switch (tiles[pos].constructor.name) {
+      case "Street":
+      case "Station":
+      case "Utility":
+        if (tiles[pos].owner == null) {
+          $("#card-action-1").val("buy").text("Buy").removeClass("hide");
+          $("#card-action-2")
+            .val("auction")
+            .text("Auction")
+            .removeClass("hide");
+          tiles[pos].display("buy");
+          await checkPopupCard();
+        } else if (tiles[pos].owner != player[currentTurn]) {
+          $("#card-action-1").addClass("hide");
+          $("#card-action-2").addClass("hide");
+          tiles[pos].display(tiles[pos].targetDisplay());
+          await tiles[pos].rentPay(player[currentTurn]);
+          setTimeout(() => {
+            $(".popup-card").addClass("hide");
+          }, 2000);
+        }
+        break;
+      case "GoToJail":
+        let step = player[currentTurn].pos - tiles[pos].jailPos;
+        movePlayer(player[currentTurn], step, timeBetweenStep / 2, false);
+        player[currentTurn].getInJail();
+        changeActionButton("end-turn");
+        break;
     }
   }
 

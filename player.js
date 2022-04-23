@@ -85,12 +85,15 @@ export default class Player {
 
   getInJail() {
     this.inJail = true;
-    $(`#${this.id}-icon-board`).append(
+    $(`#${this.id} .player-icon, #${this.id}-icon-board`).append(
       `<img src="https://img.icons8.com/external-icongeek26-flat-icongeek26/64/000000/external-jail-police-icongeek26-flat-icongeek26.png" />`
     );
   }
   getOutJail() {
     this.inJail = false;
-    $(`#${this.id}-icon-board`).children().last().remove();
+    $(`#${this.id} .player-icon, #${this.id}-icon-board`)
+      .children()
+      .last()
+      .remove();
   }
 }

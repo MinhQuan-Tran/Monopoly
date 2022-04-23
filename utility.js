@@ -6,7 +6,7 @@ export default class Utility extends Property {
   }
 
   rentPay(player, diceRoll) {
-    owner.properties.forEach((property) => {
+    this.owner.properties.forEach((property) => {
       if (property.constructor.name == "Utility") {
         if (player.pay(10 * diceRoll)) {
           this.owner.collect(10 * diceRoll);
