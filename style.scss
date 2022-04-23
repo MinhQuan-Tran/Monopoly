@@ -24,6 +24,8 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  overflow-x: overlay;
+  overflow-y: overlay;
 }
 
 .grid-container {
@@ -48,17 +50,16 @@ body {
 
 ::-webkit-scrollbar-thumb {
   border-radius: 8px;
-  border: transparent solid 4px;
+  border: transparent solid 5px;
   background-clip: content-box;
   background-color: rgba(100, 100, 100, 0.5);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(150, 150, 150, 1);
+  background-color: rgb(200, 200, 200, 1);
 }
 
 .grid-item {
-  box-sizing: border-box;
   background-color: rgb(212, 252, 218);
   border: 0;
   position: relative;
@@ -67,15 +68,15 @@ body {
 $directions: column, row;
 
 @each $direction in $directions {
-  .property-#{"" + $direction} {
+  .property-#{$direction} {
     display: flex;
     flex-direction: $direction;
     justify-content: space-around;
     align-items: center;
     text-align: center;
     img {
-      width: 3rem;
-      height: auto;
+      max-height: 3rem;
+      max-width: 3rem;
     }
   }
 }
@@ -89,6 +90,10 @@ $directions: column, row;
   align-items: center;
   text-align: center;
   position: relative;
+}
+
+.player-area {
+  border: 3px solid black;
 }
 
 .player-area,
@@ -280,28 +285,36 @@ $i: 0;
 .card-actions button {
   height: 100%;
   background-color: black;
-  width: 40%;
+  width: 48%;
   color: white;
   border: none;
   font-size: medium;
 }
 
-@media only screen and (max-width: 1000px) {
-  body {
-    flex-direction: column;
-    overflow-x: overlay;
-    overflow-y: overlay;
-  }
+// @media only screen and (max-width: 1000px) {
+//   body {
+//     flex-direction: column;
+//   }
 
-  .grid-container {
-    width: 100%;
-  }
+//   .grid-container {
+//     width: 100%;
+//     grid-template-rows: 1.5fr repeat(9, 1fr) 1.5fr;
+//     grid-template-columns: 1fr repeat(9, 1fr) 1fr;
+//   }
 
-  .player-list {
-    width: 100%;
-  }
+//   .player-list {
+//     width: 100%;
+//   }
 
-  .player-info {
-    height: 5rem;
-  }
-}
+//   .player-info {
+//     height: 5rem;
+//   }
+
+//   div {
+//     font-size: 6px;
+//   }
+
+//   .property-row {
+//     flex-direction: column;
+//   }
+// }
