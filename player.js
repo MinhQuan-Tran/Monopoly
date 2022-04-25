@@ -4,10 +4,10 @@ export default class Player {
     pos,
     name,
     color,
-    inJail,
+    inJail, // number of times to roll dice to get out of jail
     iconURL,
     balance,
-    numOutJail,
+    numOutJail, // "Get out of Jail Free" card
     properties,
     colorSet
   ) {
@@ -62,12 +62,14 @@ export default class Player {
     }
     this.balance -= amount;
     this.updateMoney();
+    console.log("-" + amount);
     return true;
   }
 
   collect(amount) {
     this.balance += amount;
     this.updateMoney();
+    console.log("+" + amount);
   }
 
   updateMoney() {
@@ -78,22 +80,30 @@ export default class Player {
     if (this.pay(property.price)) {
       property.setOwner(this);
       this.properties.push(property);
+      if (property.constructor.name == "Street") {
+        if (this.colorSet.hasOwnProperty(property.color)) {
+          this.colorSet[property.color]++;
+        } else {
+          this.colorSet[property.color] = 1;
+        }
+      }
       return true;
     }
     return false;
   }
 
   getInJail() {
-    this.inJail = true;
+    this.inJail = 3;
     $(`#${this.id} .player-icon, #${this.id}-icon-board`).append(
       `<img src="https://img.icons8.com/external-icongeek26-flat-icongeek26/64/000000/external-jail-police-icongeek26-flat-icongeek26.png" />`
     );
   }
   getOutJail() {
-    this.inJail = false;
+    this.inJail = 0;
     $(`#${this.id} .player-icon, #${this.id}-icon-board`)
       .children()
       .last()
       .remove();
+    $(`#${this.id}-icon-board`).children().last().remove();
   }
 }

@@ -75,6 +75,9 @@ $(async function () {
   let player = [];
   let currentTurn = 1;
   let tiles = [];
+  let colorSet = {};
+  let sumDice = 0;
+  let tempOpenPopup;
   const initBalance = 10000;
   const timeBetweenStep = 200;
 
@@ -86,16 +89,61 @@ $(async function () {
     $("#action-button").prop("disabled", true);
     switch ($("#action-button").val()) {
       case "roll-dice":
-        rollDices();
-        displayDices();
-        let sumDice = sumDices();
-        let step = sumDice;
-        await movePlayer(player[currentTurn], step, timeBetweenStep, true);
+        if (player[currentTurn].inJail > 0) {
+          $("#num-jail-left").text(player[currentTurn].inJail);
+          if (player[currentTurn].balance < 50) {
+            $("#jail-pay").prop("disabled", true);
+          } else {
+            $("#jail-pay").prop("disabled", false);
+          }
+          if (player[currentTurn].numOutJail <= 0) {
+            $("#jail-card").prop("disabled", true);
+          } else {
+            $("#jail-card").prop("disabled", false);
+          }
+          $("dialog").prop("open", true);
 
-        await checkTile(player[currentTurn].pos);
+          const jailDecision = await getJailDecision();
 
-        if (dices[0].value != dices[1].value) {
-          changeActionButton("end-turn");
+          console.log(jailDecision);
+
+          switch (jailDecision) {
+            case "pay":
+              player[currentTurn].pay(50);
+              player[currentTurn].getOutJail();
+              break;
+            case "card":
+              player[currentTurn].numOutJail--;
+              player[currentTurn].getOutJail();
+              break;
+            case "roll":
+              rollDices();
+              displayDices();
+              if (dices[0].value != dices[1].value) {
+                player[currentTurn].inJail--;
+                changeActionButton("end-turn");
+              } else {
+                player[currentTurn].inJail = 0;
+              }
+              if (player[currentTurn].inJail == 0) {
+                player[currentTurn].getOutJail();
+              }
+              break;
+          }
+
+          $("dialog").prop("open", false);
+        } else {
+          rollDices();
+          displayDices();
+          sumDice = sumDices();
+          let step = sumDice;
+          await movePlayer(player[currentTurn], step, timeBetweenStep, true);
+
+          await checkTile(player[currentTurn].pos);
+
+          if (dices[0].value != dices[1].value) {
+            changeActionButton("end-turn");
+          }
         }
         break;
 
@@ -128,6 +176,12 @@ $(async function () {
     }
   });
 
+  $("#card-action-2").click(() => {
+    switch ($("#card-action-2").val()) {
+    }
+    $(".popup-card").addClass("hide");
+  });
+
   function movePlayer(player, step, time, isForward) {
     return new Promise((resolve) => {
       let movePlayer = setInterval(async () => {
@@ -145,12 +199,27 @@ $(async function () {
     });
   }
 
+  function getJailDecision() {
+    return new Promise((resolve) => {
+      $("#jail-pay").click(() => {
+        resolve("pay");
+      });
+      $("#jail-card").click(() => {
+        resolve("card");
+      });
+      $("#jail-roll").click(() => {
+        resolve("roll");
+      });
+    });
+  }
+
   async function checkTile(pos) {
     switch (tiles[pos].constructor.name) {
       case "Street":
       case "Station":
       case "Utility":
         if (tiles[pos].owner == null) {
+          clearTimeout(tempOpenPopup);
           $("#card-action-1").val("buy").text("Buy").removeClass("hide");
           $("#card-action-2")
             .val("auction")
@@ -159,20 +228,44 @@ $(async function () {
           tiles[pos].display("buy");
           await checkPopupCard();
         } else if (tiles[pos].owner != player[currentTurn]) {
+          clearTimeout(tempOpenPopup);
           $("#card-action-1").addClass("hide");
           $("#card-action-2").addClass("hide");
-          tiles[pos].display(tiles[pos].targetDisplay());
-          await tiles[pos].rentPay(player[currentTurn]);
-          setTimeout(() => {
+          switch (tiles[pos].constructor.name) {
+            case "Street":
+              if (
+                tiles[pos].owner.colorSet[tiles[pos].color] ==
+                colorSet[tiles[pos].color]
+              ) {
+                tiles[pos].display(tiles[pos].targetDisplay(true));
+                await tiles[pos].rentPay(player[currentTurn], true);
+              } else {
+                tiles[pos].display(tiles[pos].targetDisplay());
+                await tiles[pos].rentPay(player[currentTurn]);
+              }
+              break;
+            case "Station":
+              tiles[pos].display(tiles[pos].targetDisplay());
+              await tiles[pos].rentPay(player[currentTurn]);
+              break;
+            case "Utility":
+              tiles[pos].display(tiles[pos].targetDisplay());
+              await tiles[pos].rentPay(player[currentTurn], sumDice);
+              break;
+          }
+          tempOpenPopup = setTimeout(() => {
             $(".popup-card").addClass("hide");
           }, 2000);
         }
         break;
       case "GoToJail":
         let step = player[currentTurn].pos - tiles[pos].jailPos;
-        movePlayer(player[currentTurn], step, timeBetweenStep / 2, false);
+        await movePlayer(player[currentTurn], step, timeBetweenStep / 2, false);
         player[currentTurn].getInJail();
         changeActionButton("end-turn");
+        break;
+      case "Tax":
+        tiles[pos].taxPay(player[currentTurn]);
         break;
     }
   }
@@ -224,7 +317,10 @@ $(async function () {
           value.housePrice,
           value.rent
         );
+        if (colorSet.hasOwnProperty(value.color)) colorSet[value.color]++;
+        else colorSet[value.color] = 1;
       });
+      console.log(colorSet);
 
       let station = data.station;
       $.each(station, function (key, value) {
@@ -244,7 +340,8 @@ $(async function () {
           value.name,
           value.price,
           null,
-          false
+          false,
+          value.iconURL
         );
       });
 
@@ -293,12 +390,12 @@ $(async function () {
       1,
       "PLAYER 1",
       "red",
-      false,
+      0,
       "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
       initBalance,
       0,
       [],
-      []
+      {}
     );
 
     player[2] = new Player(
@@ -306,12 +403,12 @@ $(async function () {
       1,
       "PLAYER 2",
       "yellow",
-      false,
+      0,
       "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
       initBalance,
       0,
       [],
-      []
+      {}
     );
 
     player[3] = new Player(
@@ -319,12 +416,12 @@ $(async function () {
       1,
       "PLAYER 3",
       "green",
-      false,
+      0,
       "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
       initBalance,
       0,
       [],
-      []
+      {}
     );
 
     player[4] = new Player(
@@ -332,12 +429,12 @@ $(async function () {
       1,
       "PLAYER 4",
       "blue",
-      false,
+      0,
       "https://img.icons8.com/color/48/000000/user-male-circle--v1.png",
       initBalance,
       0,
       [],
-      []
+      {}
     );
 
     $(`#${player[currentTurn].id}`).css("background-color", "white");

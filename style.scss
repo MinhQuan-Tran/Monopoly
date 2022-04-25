@@ -28,6 +28,21 @@ body {
   overflow-y: overlay;
 }
 
+hr {
+  height: 1px;
+  width: 100%;
+  border: 0;
+  background-color: black;
+}
+
+dialog {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: black;
+  color: white;
+}
+
 .grid-container {
   position: relative;
   box-sizing: border-box;
@@ -90,10 +105,6 @@ $directions: column, row;
   align-items: center;
   text-align: center;
   position: relative;
-}
-
-.player-area {
-  border: 3px solid black;
 }
 
 .player-area,
@@ -247,7 +258,7 @@ $i: 0;
 }
 
 .card-name {
-  height: 20%;
+  height: 15%;
   min-height: 2rem;
   width: 100%;
   background-color: blue;
@@ -256,21 +267,24 @@ $i: 0;
   align-items: center;
   font-size: large;
   color: white;
+  font-weight: bold;
 }
 
-.card-info {
+.card-info,
+.card-price {
   margin-top: 5px;
-  height: 65%;
+  margin-bottom: 5px;
   width: 100%;
   font-size: medium;
   border-collapse: collapse;
 }
 
-.card-info > tr:nth-child(-n + 2) {
-  height: 1.5rem;
-  td:nth-child(2) {
-    width: 4rem;
-  }
+.card-price {
+  height: 3rem;
+}
+
+.card-info {
+  flex-grow: 1;
 }
 
 .card-actions {

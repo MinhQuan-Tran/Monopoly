@@ -19,4 +19,11 @@ export default class Tax {
         <img src="${this.iconURL}" />`);
     }
   }
+
+  taxPay(player) {
+    if (player.pay(this.tax)) {
+      return true;
+    }
+    return false;
+  }
 }

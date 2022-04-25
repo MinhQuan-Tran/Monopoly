@@ -13,14 +13,14 @@ export default class Property {
 
   display(target) {
     $(".card-name").text(this.name);
-    $(".card-info").empty();
-    $(".card-info").append(
+    $(".card-price").empty();
+    $(".card-price").append(
       this.cardRow("Purchase Price", this.price, target === "buy")
     );
-    $(".card-info").append(
+    $(".card-price").append(
       this.cardRow("Mortgage Value", this.price / 2, target === "mortage")
     );
-    $(".card-info").append($("<tr></tr>").append($("<br>")));
+    $(".card-info").empty();
   }
 
   setOwner(player) {

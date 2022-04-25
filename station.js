@@ -9,8 +9,9 @@ export default class Station extends Property {
         <img src="https://img.icons8.com/color/96/000000/subway.png" />
         <b>\$${this.price}</b>`);
     } else {
-      $(`#tile${this.pos}`).empty().append(`<div class="property-info">
-        <div class="player-area"></div>
+      $(`#tile${this.pos}`).empty().append(`
+      <div class="player-area"></div>
+        <div class="property-info">
           ${this.name}
           <b>\$${this.price}</b>
         </div>
@@ -25,6 +26,7 @@ export default class Station extends Property {
         totalStation++;
       }
     });
+    totalStation--;
     if (player.pay(25 * Math.pow(2, totalStation))) {
       // 25, 50, 100, 200
       this.owner.collect(25 * Math.pow(2, totalStation));
@@ -46,19 +48,16 @@ export default class Station extends Property {
   display(target) {
     super.display(target);
     $(".card-info").append(
-      super.cardRow("One station", 25 * Math.pow(2, 1), target === 0)
+      super.cardRow("One station", 25 * Math.pow(2, 0), target === 0)
     );
     $(".card-info").append(
-      super.cardRow("Two Stations", 25 * Math.pow(2, 2)),
-      target === 1
+      super.cardRow("Two Stations", 25 * Math.pow(2, 1), target === 1)
     );
     $(".card-info").append(
-      super.cardRow("Three Stations", 25 * Math.pow(2, 3)),
-      target === 2
+      super.cardRow("Three Stations", 25 * Math.pow(2, 2), target === 2)
     );
     $(".card-info").append(
-      super.cardRow("Four Stations", 25 * Math.pow(2, 4)),
-      target === 3
+      super.cardRow("Four Stations", 25 * Math.pow(2, 3), target === 3)
     );
     $(".popup-card").removeClass("hide");
   }

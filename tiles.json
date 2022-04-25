@@ -211,12 +211,14 @@
         {
             "pos": 13,
             "name": "ELECTRIC COMPANY",
-            "price": 150
+            "price": 150,
+            "iconURL": "https://img.icons8.com/color/96/000000/electricity-hazard.png"
         },
         {
             "pos": 29,
             "name": "WATER WORKS",
-            "price": 150
+            "price": 150,
+            "iconURL": "https://img.icons8.com/color/96/000000/water.png"
         }
     ],
     "go": [

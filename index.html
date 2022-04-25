@@ -364,17 +364,20 @@
       <div class="popup-card-background">
         <div id="popup-card" class="popup-card hide">
           <div class="card-name">Hello</div>
+          <table class="card-price">
+            <tr>
+              <td>Purchase Price</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>Mortgage Value</td>
+              <td>10</td>
+            </tr>
+          </table>
+          <hr />
           <table class="card-info">
             <tr>
-              <td>land</td>
-              <td>10</td>
-            </tr>
-            <tr>
-              <td>land</td>
-              <td>10</td>
-            </tr>
-            <tr>
-              <td>land</td>
+              <td>Purchase Price</td>
               <td>10</td>
             </tr>
           </table>
@@ -384,6 +387,14 @@
           </div>
         </div>
       </div>
+
+      <dialog>
+        <h1>In Jail...</h1>
+        <h3><span id="num-jail-left">3</span> turns remainding in jail</h3>
+        <button id="jail-pay">Pay $50</button>
+        <button id="jail-card">Use card</button>
+        <button id="jail-roll">Roll doubles</button>
+      </dialog>
     </div>
 
     <div class="player-list"></div>

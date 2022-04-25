@@ -1,8 +1,23 @@
 import Property from "./property.js";
 
 export default class Utility extends Property {
-  constructor(pos, name, price, owner, isMortgage) {
+  constructor(pos, name, price, owner, isMortgage, iconURL) {
     super(pos, name, price, owner, isMortgage);
+    this.iconURL = iconURL;
+    if ($(`#tile${this.pos}`).hasClass("property-column")) {
+      $(`#tile${this.pos}`).empty().append(`<div class="player-area"></div>
+        ${this.name}
+        <img src="${this.iconURL}" />
+        <b>\$${this.price}</b>`);
+    } else {
+      $(`#tile${this.pos}`).empty().append(`
+      <div class="player-area"></div>
+        <div class="property-info">
+          ${this.name}
+          <b>\$${this.price}</b>
+        </div>
+        <img src="${this.iconURL}" />`);
+    }
   }
 
   rentPay(player, diceRoll) {
@@ -40,8 +55,7 @@ export default class Utility extends Property {
       super.cardRow("One utility", "4 x dice sum", target === 0)
     );
     $(".card-info").append(
-      super.cardRow("Two utilities", "10 x dice sum"),
-      target === 1
+      super.cardRow("Two utilities", "10 x dice sum", target === 1)
     );
     $(".popup-card").removeClass("hide");
   }
