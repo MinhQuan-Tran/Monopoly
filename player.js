@@ -77,7 +77,7 @@ export default class Player {
   }
 
   buy(property, amount) {
-    if (amount === null) {
+    if (amount == null) {
       amount = property.price;
     }
     if (this.pay(amount)) {
