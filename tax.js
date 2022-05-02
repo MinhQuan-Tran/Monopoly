@@ -21,7 +21,7 @@ export default class Tax {
   }
 
   taxPay(player) {
-    if (player.pay(this.tax)) {
+    if (player.pay(this.tax, true)) {
       return true;
     }
     return false;

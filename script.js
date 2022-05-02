@@ -12,71 +12,15 @@ import Jail from "./jail.js";
 import Parking from "./parking.js";
 
 $(async function () {
-  // DICE
-
   let numDices = 2;
   let dices = [];
-
-  function setupDices() {
-    for (let i = 0; i < numDices; i++) {
-      dices[i] = new Dice();
-    }
-  }
-
-  function rollDices() {
-    for (var i = 0; i < numDices; i++) {
-      dices[i].randomize();
-    }
-  }
-
-  function sumDices() {
-    let sum = 0;
-    for (var i = 0; i < numDices; i++) {
-      sum += dices[i].value;
-    }
-    return sum;
-  }
-
-  function displayDices() {
-    for (var i = 0; i < numDices; i++) {
-      let url = "";
-      switch (dices[i].value) {
-        case 1:
-          url =
-            "https://upload.wikimedia.org/wikipedia/commons/c/c8/Terning1.svg";
-          break;
-        case 2:
-          url =
-            "https://upload.wikimedia.org/wikipedia/commons/2/22/Terning2.svg";
-          break;
-        case 3:
-          url =
-            "https://upload.wikimedia.org/wikipedia/commons/9/9f/Terning3.svg";
-          break;
-        case 4:
-          url =
-            "https://upload.wikimedia.org/wikipedia/commons/2/23/Terning4.svg";
-          break;
-        case 5:
-          url =
-            "https://upload.wikimedia.org/wikipedia/commons/2/23/Terning5.svg";
-          break;
-        default:
-          url =
-            "https://upload.wikimedia.org/wikipedia/commons/0/0c/Terning6.svg";
-      }
-      $(`#dice${i + 1}`).attr("src", url);
-    }
-  }
-
-  // MAIN
-
   let numPlayers = 4;
   let player = [];
   let currentTurn = 1;
   let tiles = [];
   let colorSet = {};
   let sumDice = 0;
+  let sameDices = 0;
   let tempOpenPopup;
   const initBalance = 1000;
   const timeBetweenStep = 200;
@@ -136,13 +80,42 @@ $(async function () {
           rollDices();
           displayDices();
           sumDice = sumDices();
-          let step = sumDice;
-          await movePlayer(player[currentTurn], step, timeBetweenStep, true);
-
-          await checkTile(player[currentTurn].pos);
-
-          if (dices[0].value != dices[1].value) {
+          if (sameDices == 2 && dices[0].value == dices[1].value) {
+            const jailPos = tiles.find((element) => {
+              if (element != null && element.constructor.name == "Jail") {
+                return true;
+              }
+            }).pos;
+            let step;
+            let moveForward = false;
+            if (player[currentTurn].pos > jailPos) {
+              step = player[currentTurn].pos - jailPos;
+            } else {
+              step = jailPos - player[currentTurn].pos;
+              moveForward = true;
+            }
+            console.log(jailPos);
+            await movePlayer(
+              player[currentTurn],
+              step,
+              timeBetweenStep / 2,
+              moveForward
+            );
+            player[currentTurn].getInJail();
+            sameDices = 0;
             changeActionButton("end-turn");
+          } else {
+            let step = sumDice;
+            await movePlayer(player[currentTurn], step, timeBetweenStep, true);
+
+            await checkTile(player[currentTurn].pos);
+
+            if (dices[0].value != dices[1].value) {
+              sameDices = 0;
+              changeActionButton("end-turn");
+            } else {
+              sameDices++;
+            }
           }
         }
         break;
@@ -376,6 +349,58 @@ $(async function () {
         $("#action-button").val("roll-dice");
         $("#action-button").text("ROLL DICE");
         break;
+    }
+  }
+
+  function setupDices() {
+    for (let i = 0; i < numDices; i++) {
+      dices[i] = new Dice();
+    }
+  }
+
+  function rollDices() {
+    for (var i = 0; i < numDices; i++) {
+      dices[i].randomize();
+    }
+  }
+
+  function sumDices() {
+    let sum = 0;
+    for (var i = 0; i < numDices; i++) {
+      sum += dices[i].value;
+    }
+    return sum;
+  }
+
+  function displayDices() {
+    for (var i = 0; i < numDices; i++) {
+      let url = "";
+      switch (dices[i].value) {
+        case 1:
+          url =
+            "https://upload.wikimedia.org/wikipedia/commons/c/c8/Terning1.svg";
+          break;
+        case 2:
+          url =
+            "https://upload.wikimedia.org/wikipedia/commons/2/22/Terning2.svg";
+          break;
+        case 3:
+          url =
+            "https://upload.wikimedia.org/wikipedia/commons/9/9f/Terning3.svg";
+          break;
+        case 4:
+          url =
+            "https://upload.wikimedia.org/wikipedia/commons/2/23/Terning4.svg";
+          break;
+        case 5:
+          url =
+            "https://upload.wikimedia.org/wikipedia/commons/2/23/Terning5.svg";
+          break;
+        default:
+          url =
+            "https://upload.wikimedia.org/wikipedia/commons/0/0c/Terning6.svg";
+      }
+      $(`#dice${i + 1}`).attr("src", url);
     }
   }
 
