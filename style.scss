@@ -109,7 +109,7 @@ $directions: column, row;
 }
 
 .player-area,
-.popup-card-background {
+.card-background {
   height: 100%;
   width: 100%;
   position: absolute;
@@ -118,6 +118,10 @@ $directions: column, row;
   align-items: center;
   flex-wrap: wrap;
   pointer-events: none;
+}
+
+.card-background {
+  justify-content: center;
 }
 
 $property-colors: red, yellow, green, blue, brown, skyblue, palevioletred,
@@ -236,7 +240,8 @@ $i: 0;
   }
 }
 
-.popup-card {
+.property-card,
+.auction-card {
   aspect-ratio: 1 / 1.4;
   height: 45%;
   background-color: white;
@@ -244,10 +249,28 @@ $i: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   padding: 0.5rem;
   pointer-events: auto;
+}
+
+.auction-card {
+  background-color: black;
+  color: white;
+  .auction-options,
+  .highest-auction {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 1rem;
+    button {
+      height: 2rem;
+      width: 90%;
+      font-size: large;
+    }
+  }
 }
 
 .special-card {
@@ -289,7 +312,7 @@ $i: 0;
   flex-grow: 1;
 }
 
-.card-actions {
+.card-options {
   height: 10%;
   width: 100%;
   display: flex;
@@ -298,7 +321,7 @@ $i: 0;
   align-items: center;
 }
 
-.card-actions button {
+.card-options button {
   height: 100%;
   background-color: black;
   width: 48%;

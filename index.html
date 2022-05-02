@@ -363,8 +363,8 @@
         <button id="action-button" value="roll-dice">ROLL DICE</button>
       </div>
 
-      <div class="popup-card-background">
-        <div id="popup-card" class="popup-card hide">
+      <div class="card-background">
+        <div id="property-card" class="property-card hide">
           <div class="card-name">Hello</div>
           <table class="card-price">
             <tr>
@@ -379,13 +379,29 @@
           <hr />
           <table class="card-info">
             <tr>
-              <td>Purchase Price</td>
+              <td>Rent</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>1 house</td>
               <td>10</td>
             </tr>
           </table>
-          <div class="card-actions">
-            <button id="card-action-1" value="buy">Buy</button>
-            <button id="card-action-2" value="auction">Auction</button>
+          <div class="card-options">
+            <button id="card-option-1" value="buy">Buy</button>
+            <button id="card-option-2" value="auction">Auction</button>
+          </div>
+        </div>
+        <div id="auction-card" class="auction-card hide">
+          <div class="highest-auction">
+            <h2 id="highest-auction-player">Player's name</h2>
+            <h1 id="highest-auction-amount">$1000</h1>
+          </div>
+          <div class="auction-options">
+            <button id="auction-option1">+100</button>
+            <button id="auction-option2">+10</button>
+            <button id="auction-option3">+1</button>
+            <button id="auction-pass">Pass</button>
           </div>
         </div>
       </div>

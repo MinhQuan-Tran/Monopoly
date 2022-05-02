@@ -81,6 +81,7 @@ export default class Street extends Property {
 
   display(target) {
     super.display(target);
+    $(".card-name").css("background-color", this.color);
     $(".card-info").append(super.cardRow("Rent", this.rent[0], target === 0));
     $(".card-info").append(
       super.cardRow("Rent with color set", this.rent[0] * 2, target === 1)
@@ -98,6 +99,6 @@ export default class Street extends Property {
       super.cardRow("Four house", this.rent[4], target === 5)
     );
     $(".card-info").append(super.cardRow("Hotel", this.rent[5]), target === 6);
-    $(".popup-card").removeClass("hide");
+    $(".property-card").removeClass("hide");
   }
 }

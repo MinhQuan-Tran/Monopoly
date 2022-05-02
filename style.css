@@ -117,7 +117,7 @@ dialog {
 }
 
 .player-area,
-.popup-card-background {
+.card-background {
   height: 100%;
   width: 100%;
   position: absolute;
@@ -126,6 +126,10 @@ dialog {
   align-items: center;
   flex-wrap: wrap;
   pointer-events: none;
+}
+
+.card-background {
+  justify-content: center;
 }
 
 .house-area-red {
@@ -420,7 +424,8 @@ dialog {
   filter: drop-shadow(0 0 0.5rem blue);
 }
 
-.popup-card {
+.property-card,
+.auction-card {
   aspect-ratio: 1/1.4;
   height: 45%;
   background-color: white;
@@ -428,10 +433,29 @@ dialog {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   padding: 0.5rem;
   pointer-events: auto;
+}
+
+.auction-card {
+  background-color: black;
+  color: white;
+}
+.auction-card .auction-options,
+.auction-card .highest-auction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 1rem;
+}
+.auction-card .auction-options button,
+.auction-card .highest-auction button {
+  height: 2rem;
+  width: 90%;
+  font-size: large;
 }
 
 .special-card {
@@ -473,7 +497,7 @@ dialog {
   flex-grow: 1;
 }
 
-.card-actions {
+.card-options {
   height: 10%;
   width: 100%;
   display: flex;
@@ -482,7 +506,7 @@ dialog {
   align-items: center;
 }
 
-.card-actions button {
+.card-options button {
   height: 100%;
   background-color: black;
   width: 48%;

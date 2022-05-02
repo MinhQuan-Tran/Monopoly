@@ -47,6 +47,7 @@ export default class Station extends Property {
 
   display(target) {
     super.display(target);
+    $(".card-name").css("background-color", "black");
     $(".card-info").append(
       super.cardRow("One station", 25 * Math.pow(2, 0), target === 0)
     );
@@ -59,6 +60,6 @@ export default class Station extends Property {
     $(".card-info").append(
       super.cardRow("Four Stations", 25 * Math.pow(2, 3), target === 3)
     );
-    $(".popup-card").removeClass("hide");
+    $(".property-card").removeClass("hide");
   }
 }

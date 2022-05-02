@@ -78,7 +78,7 @@ $(async function () {
   let colorSet = {};
   let sumDice = 0;
   let tempOpenPopup;
-  const initBalance = 10000;
+  const initBalance = 1000;
   const timeBetweenStep = 200;
 
   await setupTiles();
@@ -148,20 +148,19 @@ $(async function () {
         break;
 
       case "end-turn":
-        $(`#${player[currentTurn].id}`).css("background-color", "lightgrey");
         currentTurn++;
         if (currentTurn > numPlayers) {
           currentTurn = 1;
         }
         changeActionButton("roll-dice");
-        $(`#${player[currentTurn].id}`).css("background-color", "white");
+        changeFocusPlayer(currentTurn);
         break;
     }
     $("#action-button").prop("disabled", false);
   });
 
-  $("#card-action-1").click(() => {
-    switch ($("#card-action-1").val()) {
+  $("#card-option-1").click(() => {
+    switch ($("#card-option-1").val()) {
       case "buy":
         if (
           ["Street", "Station", "Utility"].includes(
@@ -169,18 +168,96 @@ $(async function () {
           )
         ) {
           if (player[currentTurn].buy(tiles[player[currentTurn].pos])) {
-            $(".popup-card").addClass("hide");
+            $(".property-card").addClass("hide");
           }
         }
         break;
     }
   });
 
-  $("#card-action-2").click(() => {
-    switch ($("#card-action-2").val()) {
+  $("#card-option-2").click(async () => {
+    switch ($("#card-option-2").val()) {
+      case "auction":
+        let auctionCurrentTurn = currentTurn;
+        let amount = 0;
+        let highestAuctionPlayer = null; // turn
+        $("#auction-card").removeClass("hide");
+        while (highestAuctionPlayer != auctionCurrentTurn) {
+          changeFocusPlayer(auctionCurrentTurn);
+          updateAuction(
+            amount,
+            highestAuctionPlayer,
+            player[auctionCurrentTurn].balance < amount + 100,
+            player[auctionCurrentTurn].balance < amount + 10,
+            player[auctionCurrentTurn].balance < amount + 1
+          );
+          let addAmount = await getAuction();
+          if (addAmount > 0) {
+            amount += addAmount;
+            highestAuctionPlayer = auctionCurrentTurn;
+          }
+          auctionCurrentTurn++;
+          if (auctionCurrentTurn > numPlayers) {
+            auctionCurrentTurn = 1;
+          }
+          if (auctionCurrentTurn == currentTurn && amount == 0) {
+            break;
+          }
+        }
+        $("#auction-card").addClass("hide");
+        if (amount > 0) {
+          player[highestAuctionPlayer].buy(
+            tiles[player[currentTurn].pos],
+            amount
+          );
+        }
+        changeFocusPlayer(currentTurn);
+        break;
     }
-    $(".popup-card").addClass("hide");
+    $(".property-card").addClass("hide");
   });
+
+  function updateAuction(
+    amount,
+    highestAuctionPlayer,
+    disableOption1,
+    disableOption2,
+    disableOption3
+  ) {
+    $("#highest-auction-player").text(
+      highestAuctionPlayer === null
+        ? "No one"
+        : player[highestAuctionPlayer].name
+    );
+    $("#highest-auction-amount").text(`$${amount}`);
+    $("#auction-option1").prop("disabled", disableOption1);
+    $("#auction-option2").prop("disabled", disableOption2);
+    $("#auction-option3").prop("disabled", disableOption3);
+  }
+
+  function getAuction() {
+    return new Promise((resolve) => {
+      $("#auction-option1").click(() => {
+        resolve(100);
+      });
+      $("#auction-option2").click(() => {
+        resolve(10);
+      });
+      $("#auction-option3").click(() => {
+        resolve(1);
+      });
+      $("#auction-pass").click(() => {
+        resolve(0);
+      });
+    });
+  }
+
+  function changeFocusPlayer(toPlayer) {
+    player.forEach((element) => {
+      $(`#${element.id}`).css("background-color", "lightgrey");
+    });
+    $(`#${player[toPlayer].id}`).css("background-color", "white");
+  }
 
   function movePlayer(player, step, time, isForward) {
     return new Promise((resolve) => {
@@ -220,8 +297,8 @@ $(async function () {
       case "Utility":
         if (tiles[pos].owner == null) {
           clearTimeout(tempOpenPopup);
-          $("#card-action-1").val("buy").text("Buy").removeClass("hide");
-          $("#card-action-2")
+          $("#card-option-1").val("buy").text("Buy").removeClass("hide");
+          $("#card-option-2")
             .val("auction")
             .text("Auction")
             .removeClass("hide");
@@ -229,8 +306,8 @@ $(async function () {
           await checkPopupCard();
         } else if (tiles[pos].owner != player[currentTurn]) {
           clearTimeout(tempOpenPopup);
-          $("#card-action-1").addClass("hide");
-          $("#card-action-2").addClass("hide");
+          $("#card-option-1").addClass("hide");
+          $("#card-option-2").addClass("hide");
           switch (tiles[pos].constructor.name) {
             case "Street":
               if (
@@ -254,7 +331,7 @@ $(async function () {
               break;
           }
           tempOpenPopup = setTimeout(() => {
-            $(".popup-card").addClass("hide");
+            $(".property-card").addClass("hide");
           }, 2000);
         }
         break;
@@ -272,18 +349,18 @@ $(async function () {
 
   function checkPopupCard() {
     return new Promise((resolve) => {
-      if ($(".popup-card").hasClass("hide")) {
+      if ($(".property-card").hasClass("hide")) {
         resolve();
       }
 
       let observer = new MutationObserver((mutations) => {
-        if ($(".popup-card").hasClass("hide")) {
+        if ($(".property-card").hasClass("hide")) {
           resolve();
           observer.disconnect();
         }
       });
 
-      observer.observe(document.getElementById("popup-card"), {
+      observer.observe(document.getElementById("property-card"), {
         attributes: true,
       });
     });

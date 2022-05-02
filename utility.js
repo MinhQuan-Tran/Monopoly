@@ -51,12 +51,13 @@ export default class Utility extends Property {
 
   display(target) {
     super.display(target);
+    $(".card-name").css("background-color", "black");
     $(".card-info").append(
       super.cardRow("One utility", "4 x dice sum", target === 0)
     );
     $(".card-info").append(
       super.cardRow("Two utilities", "10 x dice sum", target === 1)
     );
-    $(".popup-card").removeClass("hide");
+    $(".property-card").removeClass("hide");
   }
 }

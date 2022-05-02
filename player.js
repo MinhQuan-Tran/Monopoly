@@ -76,8 +76,11 @@ export default class Player {
     $(`#${this.id} .player-balance`).text("$" + this.balance);
   }
 
-  buy(property) {
-    if (this.pay(property.price)) {
+  buy(property, amount) {
+    if (amount === null) {
+      amount = property.price;
+    }
+    if (this.pay(amount)) {
       property.setOwner(this);
       this.properties.push(property);
       if (property.constructor.name == "Street") {
