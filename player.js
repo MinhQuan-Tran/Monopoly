@@ -55,8 +55,8 @@ export default class Player {
       .appendTo(`#tile${this.pos} .player-area`);
   }
 
-  pay(amount, forced) {
-    if (this.balance < amount && !forced) {
+  pay(amount, isForced) {
+    if (this.balance < amount && !isForced) {
       alert("Not enough money!");
       return false;
     }
